@@ -3,29 +3,28 @@ import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-ro
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { ChatInterface } from "./components/ChatInterface";
-import ChatComponent from "./components/ChatComponet";
-import { useEffect } from "react";
+import CallbackHandler from "./components/CallbackHandler"; 
 
-const CallbackHandler = ()=>{
-  const location = useLocation();
-  const navigate = useNavigate();
+// const CallbackHandler = ()=>{
+//   const location = useLocation();
+//   const navigate = useNavigate();
 
-  useEffect(()=>{
-    const query = new URLSearchParams(location.search);
-    const accessToken = query.get('access_token');
-    const refreshToken = query.get('refresh_token');
+//   useEffect(()=>{
+//     const query = new URLSearchParams(location.search);
+//     const accessToken = query.get('access_token');
+//     const refreshToken = query.get('refresh_token');
 
-    if(accessToken && refreshToken){
-      localStorage.setItem('spotify_access_token', accessToken);
-      localStorage.setItem('spotify_refresh_token', refreshToken);
+//     if(accessToken && refreshToken){
+//       localStorage.setItem('spotify_access_token', accessToken);
+//       localStorage.setItem('spotify_refresh_token', refreshToken);
 
-      navigate('/dashboard');
-    }else{
-      navigate('/');
-    }
-  },[location,navigate])
-  return <div>Processing login.....</div>
-}
+//       navigate('/dashboard');
+//     }else{
+//       navigate('/');
+//     }
+//   },[location,navigate])
+//   return <div>Processing login.....</div>
+// }
 
 
 const App = () => (
