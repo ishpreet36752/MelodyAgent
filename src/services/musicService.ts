@@ -1,53 +1,65 @@
+import { MoodType, Playlist } from '../types/chat';
+import axios from 'axios';
 
-import { Track } from '../types/chat';
-import { MoodType } from '../components/MoodBubble';
-import { detectMood } from '../lib/moodDetection';
-
-// Sample tracks data
-export const sampleTracks: Track[] = [
-  {
-    id: '1',
-    name: 'Blinding Lights',
-    artist: 'The Weeknd',
-    albumArt: 'https://i.scdn.co/image/ab67616d0000b273a6e7a25c6b3d5294c0f356bd',
-  },
-  {
-    id: '2',
-    name: 'good 4 u',
-    artist: 'Olivia Rodrigo',
-    albumArt: 'https://i.scdn.co/image/ab67616d0000b273e472a5f4f4eaf20985d3b45a',
-  },
-  {
-    id: '3',
-    name: 'Levitating',
-    artist: 'Dua Lipa',
-    albumArt: 'https://i.scdn.co/image/ab67616d0000b273bd26ede1ae69327010d49946',
-  },
-  {
-    id: '4',
-    name: 'As It Was',
-    artist: 'Harry Styles',
-    albumArt: 'https://i.scdn.co/image/ab67616d0000b273b46f74097655d7f353caab14',
-  },
-];
-
-export const getRecommendedTracks = (count: number = 3): Track[] => {
-  // Get random tracks for demonstration
-  const shuffledTracks = [...sampleTracks].sort(() => 0.5 - Math.random());
-  return shuffledTracks.slice(0, count);
+export const checkTokenExpiration = () => {
+  const authData = JSON.parse(localStorage.getItem('spotify_auth') || '{}');
+  if (!authData.timestamp) return true;
+  return Date.now() - authData.timestamp > 10 * 60 * 1000; // 5 minutes
 };
 
-export const moods: MoodType[] = ['happy', 'sad', 'energetic', 'calm', 'focus'];
+export const fetchPlaylists = async (mood: MoodType): Promise<Playlist[]> => {
+  if (checkTokenExpiration()) {
+    localStorage.removeItem('spotify_auth');
+    window.location.href = '/';
+    return [];
+  }
 
-export const processUserMessage = async (message: string): Promise<{
-  detectedMood: MoodType;
-  recommendedTracks: Track[];
-}> => {
-  // Detect mood from message
-  const detectedMood = await detectMood(message);
-  
-  // Get recommended tracks
-  const recommendedTracks = getRecommendedTracks();
-  
-  return { detectedMood, recommendedTracks };
+  try {
+    const authData = JSON.parse(localStorage.getItem('spotify_auth') || '{}');
+    const response = await axios.get(`https://api.spotify.com/v1/search?q=${mood}%20mood&type=playlist&limit=10`, {
+      headers: {
+        Authorization: `Bearer ${authData.access_token}`
+      }
+    });
+
+    const data = await response.data;
+    return data.playlists.items.map((item: any) => ({
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      image: item.images[0]?.url || '/default-playlist.png',
+      url: item.external_urls.spotify,
+      tracks: item.tracks.total,
+      owner: item.owner.display_name
+    }));
+  } catch (error) {
+    console.error('Playlist fetch error:', error);
+    throw error;
+  }
+};
+
+export const detectMood = (text: string): MoodType => {
+  const lowerText = text.toLowerCase();
+  const moodMap: Record<MoodType, RegExp[]> = {
+    happy: [/happy/, /joy/, /great/, /excited/],
+    sad: [/sad/, /upset/, /depressed/, /down/],
+    energetic: [/energetic/, /hyper/, /pumped/, /workout/],
+    calm: [/calm/, /relax/, /peaceful/, /chill/],
+    focus: [/focus/, /concentrate/, /study/, /work/]
+  };
+
+  for (const [mood, patterns] of Object.entries(moodMap)) {
+    if (patterns.some(pattern => pattern.test(lowerText))) {
+      return mood as MoodType;
+    }
+  }
+
+  const moods: MoodType[] = ['happy', 'sad', 'energetic', 'calm', 'focus'];
+  return moods[Math.floor(Math.random() * moods.length)];
+};
+
+export const processUserMessage = async (text: string) => {
+  const detectedMood = detectMood(text);
+  const playlists = await fetchPlaylists(detectedMood);
+  return { detectedMood, playlists };
 };

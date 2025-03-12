@@ -1,11 +1,9 @@
-
 import React from 'react';
 import { MoodType } from './MoodBubble';
 
 interface MessageBubbleProps {
   text: string;
   isUser: boolean;
-  timestamp: Date;
   detectedMood?: MoodType;
 }
 

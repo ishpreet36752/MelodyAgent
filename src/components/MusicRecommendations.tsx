@@ -1,16 +1,14 @@
-
+// src/components/MusicRecommendations.tsx
 import React from 'react';
-import { MusicCard } from './MusicCard';
-import { Track } from '../types/chat';
-import { MoodType } from './MoodBubble';
+import { Playlist, MoodType } from '../types/chat';
 
 interface MusicRecommendationsProps {
-  tracks: Track[];
+  playlists: Playlist[];
   currentMood: MoodType | null;
 }
 
 export const MusicRecommendations: React.FC<MusicRecommendationsProps> = ({ 
-  tracks, 
+  playlists, 
   currentMood 
 }) => {
   return (
@@ -18,41 +16,43 @@ export const MusicRecommendations: React.FC<MusicRecommendationsProps> = ({
       <div className="mb-4">
         <h2 className="text-xl font-semibold mb-1">
           {currentMood 
-            ? `Your ${currentMood} playlist` 
-            : 'Your personalized recommendations'}
+            ? `${currentMood.charAt(0).toUpperCase() + currentMood.slice(1)} Playlists` 
+            : 'Your Personalized Playlists'}
         </h2>
         <p className="text-sm text-foreground/70">
-          {tracks.length > 0 
-            ? 'Based on your current mood' 
-            : 'Share how you feel to get music recommendations'}
+          {playlists.length > 0 
+            ? 'Curated based on your current mood' 
+            : 'Share your mood to discover new music'}
         </p>
       </div>
-      
-      {tracks.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {tracks.map((track, index) => (
-            <MusicCard 
-              key={track.id} 
-              track={track} 
-              mood={currentMood || undefined}
-              isCurrent={index === 0} 
+
+      <div className="space-y-4">
+        {playlists.map((playlist) => (
+          <a
+            key={playlist.id}
+            href={playlist.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glassmorphism p-4 rounded-xl hover:bg-primary/10 transition-colors flex gap-4 items-start"
+          >
+            <img 
+              src={playlist.image} 
+              alt={playlist.name}
+              className="w-20 h-20 object-cover rounded-lg"
             />
-          ))}
-        </div>
-      ) : (
-        <div className="glassmorphism rounded-xl p-6 flex flex-col items-center justify-center text-center h-64">
-          <div className="w-16 h-16 mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 6v6l4 2" />
-            </svg>
-          </div>
-          <h3 className="text-lg font-medium mb-2">Waiting for your mood</h3>
-          <p className="text-sm text-foreground/70">
-            Share how you're feeling or select a mood to get personalized music recommendations
-          </p>
-        </div>
-      )}
+            <div className="flex-1">
+              <h3 className="font-semibold text-lg mb-1">{playlist.name}</h3>
+              <p className="text-sm text-foreground/70 mb-2">{playlist.owner}</p>
+              <p className="text-sm line-clamp-2 text-foreground/80">
+                {playlist.description || 'No description available'}
+              </p>
+              <div className="mt-2 text-xs text-primary">
+                {playlist.tracks} tracks
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
   );
 };

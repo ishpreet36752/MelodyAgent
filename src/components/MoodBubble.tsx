@@ -24,9 +24,9 @@ export const MoodBubble: React.FC<MoodBubbleProps> = ({
   
   const moodLabels = {
     happy: 'Happy',
-    sad: 'Sad',
+    sad: '    Sad  ',
     energetic: 'Energetic',
-    calm: 'Calm',
+    calm: '  Calm  ',
     focus: 'Focused'
   };
   

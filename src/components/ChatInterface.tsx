@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { Message, Track } from '../types/chat';
-import { MoodType } from './MoodBubble';
+import React, { useState , useEffect } from 'react';
+import { Message, Playlist,MoodType} from '../types/chat';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import { MoodSelector } from './MoodSelector';
 import { MusicRecommendations } from './MusicRecommendations';
-import { moods, processUserMessage, getRecommendedTracks } from '../services/musicService';
+import { processUserMessage, fetchPlaylists} from '../services/musicService';
 import { Header } from './Header';
 
 export const ChatInterface: React.FC = () => {
@@ -14,74 +13,87 @@ export const ChatInterface: React.FC = () => {
       id: '1',
       text: "Hello! I'm your music mood assistant. How are you feeling today?",
       isUser: false
-      // timestamp: new Date(Date.now() - 60000),
     }
   ]);
   
   const [isLoading, setIsLoading] = useState(false);
   const [currentMood, setCurrentMood] = useState<MoodType | null>(null);
-  const [recommendedTracks, setRecommendedTracks] = useState<Track[]>([]);
-  
+  const [recommendedPlaylists, setRecommendedPlaylists] = useState<Playlist[]>([]);
+
+  const moods: MoodType[] = ['happy', 'sad', 'energetic', 'calm', 'focus'];
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const authData = localStorage.getItem('spotify_access_token');
+      if (!authData) window.location.href = '/';
+    };
+    checkAuth();
+  }, []);
+
   const handleSendMessage = async (inputValue: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
       text: inputValue,
       isUser: true
-      // timestamp: new Date(),
     };
     
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
-    
-    setTimeout(async () => {
-      const { detectedMood, recommendedTracks } = await processUserMessage(inputValue);
-      
+
+    try {
+      const { detectedMood, playlists } = await processUserMessage(inputValue);
       setCurrentMood(detectedMood);
-      setRecommendedTracks(recommendedTracks);
-      
+      setRecommendedPlaylists(playlists);
+
       const botReply: Message = {
         id: (Date.now() + 1).toString(),
-        text: `I sense you're feeling ${detectedMood}. Here are some tracks that match your mood!`,
+        text: `I sense you're feeling ${detectedMood}. Here are some playlists that match your mood!`,
         isUser: false,
-        // timestamp: new Date(),
         detectedMood,
       };
       
       setMessages(prev => [...prev, botReply]);
+    } catch (error) {
+      console.error('Error:', error);
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        text: "Sorry, I couldn't fetch playlists. Please try again.",
+        isUser: false
+      }]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
-  
-  const handleMoodSelection = (mood: MoodType) => {
+
+  const handleMoodSelection = async (mood: MoodType) => {
     setCurrentMood(mood);
-    
+    setIsLoading(true);
+
     const moodMessage: Message = {
       id: Date.now().toString(),
       text: `I'm feeling ${mood} today.`,
       isUser: true,
-      // timestamp: new Date(),
     };
     
     setMessages(prev => [...prev, moodMessage]);
-    
-    // Simulate processing time
-    setIsLoading(true);
-    setTimeout(() => {
-      
-      const tracks = getRecommendedTracks();
-      setRecommendedTracks(tracks);
-      
+
+    try {
+      const playlists = await fetchPlaylists(mood);
+      setRecommendedPlaylists(playlists);
+
       const botReply: Message = {
         id: (Date.now() + 1).toString(),
-        text: `Great! Here are some ${mood} tracks I think you'll enjoy.`,
+        text: `Great! Here are some ${mood} playlists I think you'll enjoy.`,
         isUser: false,
-        // timestamp: new Date(),
         detectedMood: mood,
       };
       
       setMessages(prev => [...prev, botReply]);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
   
   return (
@@ -104,7 +116,6 @@ export const ChatInterface: React.FC = () => {
                 id: '1',
                 text: "Hello! I'm your music mood assistant. How are you feeling today?",
                 isUser: false,
-                // timestamp: new Date(),
               }])}
             >
               Clear Chat
@@ -115,7 +126,7 @@ export const ChatInterface: React.FC = () => {
             <MessageList messages={messages} isLoading={isLoading} />
           </div>
           
-          <div className="mb-6">
+          <div className="">
             <MoodSelector 
               moods={moods} 
               currentMood={currentMood} 
@@ -127,10 +138,10 @@ export const ChatInterface: React.FC = () => {
         </div>
         
         <div className="md:w-[380px] lg:w-[420px]">
-          <MusicRecommendations 
-            tracks={recommendedTracks} 
-            currentMood={currentMood} 
-          />
+        <MusicRecommendations 
+              playlists={recommendedPlaylists} 
+              currentMood={currentMood} 
+            />
         </div>
       </div>
     </div>

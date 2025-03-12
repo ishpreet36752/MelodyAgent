@@ -1,17 +1,19 @@
-
-import { MoodType } from '../components/MoodBubble';
-
+// src/types/chat.ts
 export interface Message {
   id: string;
   text: string;
   isUser: boolean;
-  timestamp: Date;
   detectedMood?: MoodType;
 }
 
-export interface Track {
+export interface Playlist {
   id: string;
   name: string;
-  artist: string;
-  albumArt: string;
+  description: string;
+  image: string;
+  url: string;
+  tracks: number;
+  owner: string;
 }
+
+export type MoodType = 'happy' | 'sad' | 'energetic' | 'calm' | 'focus';

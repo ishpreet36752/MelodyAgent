@@ -14,7 +14,7 @@ export const MoodSelector: React.FC<MoodSelectorProps> = ({
   onMoodSelect 
 }) => {
   return (
-    <div className="flex gap-2 mb-4 overflow-x-auto py-2 px-1">
+    <div className="flex gap-2 mb-4 overflow-x-auto p-2 justify-center">
       {moods.map(mood => (
         <MoodBubble 
           key={mood} 
