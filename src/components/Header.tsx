@@ -8,7 +8,7 @@ import { LogOut } from 'lucide-react';
 export const Header: React.FC = ({}) => {
   const accessToken = localStorage.getItem("spotify_access_token");
   const authorizationHandler = () => {
-    window.location.href = "http://localhost:8888/login"; // Direct navigation
+    window.location.href = `${import.meta.env.VITE_BACKEND_URI}/login`; // Direct navigation
   };
 
   // useEffect(() => {
@@ -17,7 +17,7 @@ export const Header: React.FC = ({}) => {
 
   const signOutHandler = async () => {
     try {
-      const res = await axios.get('http://localhost:8888/logout');
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/logout`);
       localStorage.removeItem('spotify_access_token');
       localStorage.removeItem('spotify_refresh_token');
       window.location.href = '/'; 
