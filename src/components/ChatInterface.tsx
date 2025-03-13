@@ -24,8 +24,8 @@ export const ChatInterface: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = () => {
-      const authData = localStorage.getItem('spotify_access_token');
-      if (!authData) window.location.href = '/';
+      const accessToken = localStorage.getItem('spotify_access_token');
+      if (!accessToken) window.location.href = '/';
     };
     checkAuth();
   }, []);
