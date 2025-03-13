@@ -1,26 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
 import AnimatedLogo from "./AnimatedLogo";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import UserProfile from "./UserProfile";
 import { LogOut } from 'lucide-react';
 
-export const Header: React.FC = ({}) => {
+export const Header: React.FC = () => {
   const accessToken = localStorage.getItem("spotify_access_token");
+  
   const authorizationHandler = () => {
-    window.location.href = `${import.meta.env.VITE_BACKEND_URI}/login`; // Direct navigation
+    // Navigate to the backend login endpoint.
+    window.location.href = `${import.meta.env.VITE_BACKEND_URI}/login`;
   };
-
-  // useEffect(() => {
-  //   authorizationHandler();
-  // }, []);
 
   const signOutHandler = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/logout`);
+      await axios.get(`http://localhost:8888/logout`);
       localStorage.removeItem('spotify_access_token');
       localStorage.removeItem('spotify_refresh_token');
-      window.location.href = '/'; 
+      window.location.href = '/';
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -36,7 +34,6 @@ export const Header: React.FC = ({}) => {
           </h1>
         </div>
       </Link>
-
       <div className="flex items-center gap-4">
         <button className="text-sm md:text-base font-medium text-primary/80 hover:text-primary transition-colors">
           About
@@ -53,14 +50,14 @@ export const Header: React.FC = ({}) => {
           </button>
         ) : (
           <>
-          <UserProfile />
-          <button
+            <UserProfile />
+            <button
               className="text-sm md:text-base font-medium text-primary/80 hover:text-primary transition-colors"
               onClick={signOutHandler}
             >
-              <LogOut className="text-white"/>
+              <LogOut className="text-white" />
             </button>
-            </>
+          </>
         )}
       </div>
     </header>

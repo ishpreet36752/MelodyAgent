@@ -6,6 +6,7 @@ const UserProfile: React.FC = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      // Retrieve the individual access token from localStorage
       const accessToken = localStorage.getItem('spotify_access_token');
       if (accessToken) {
         try {
@@ -15,7 +16,7 @@ const UserProfile: React.FC = () => {
             },
           });
           setUserData(response.data);
-          console.log(userData)
+          console.log('User data:', response.data);
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -30,7 +31,11 @@ const UserProfile: React.FC = () => {
       {userData ? (
         <div className="flex items-center text-primary font-bold gap-4">
           {userData.external_urls?.spotify ? (
-            <a href={userData.external_urls.spotify} target="_blank" rel="noopener noreferrer">
+            <a
+              href={userData.external_urls.spotify}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img
                 src={userData.images[0]?.url}
                 alt="Profile"
