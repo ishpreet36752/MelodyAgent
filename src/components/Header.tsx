@@ -9,7 +9,6 @@ export const Header: React.FC = () => {
   const accessToken = localStorage.getItem("spotify_access_token");
   
   const authorizationHandler = () => {
-    // Navigate to the backend login endpoint.
     window.location.href = `${import.meta.env.VITE_BACKEND_URI}/login`;
   };
 
