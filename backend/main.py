@@ -37,22 +37,22 @@ async def handle_rate_limits(client: httpx.AsyncClient, method: str, endpoint: s
         if endpoint in rate_limit_store:
             reset_time = rate_limit_store[endpoint]
             if reset_time > time.time():
-                await asyncio.sleep(reset_time - time.time())
+                await asyncio.sleep(reset_time - time.time()) # wait until rate limit resets
             del rate_limit_store[endpoint]
 
-       
+       ## Check if endpoint is rate-limited
         if method == "POST":
             response = await client.post(endpoint, data=data)
         else:
             response = await client.get(endpoint)
-
+        #if blocked by rate limit wait for retry time
         if response.status_code == 429:
             retry_after = int(response.headers.get("Retry-After", 1))
             rate_limit_store[endpoint] = time.time() + retry_after
             await asyncio.sleep(retry_after)
             retries += 1
         else:
-            return response
+            return response # return the response if successful
     raise HTTPException(status_code=429, detail="Rate limit exceeded")
 
 
@@ -120,7 +120,9 @@ async def refresh_token(refresh_token: str):
         }
         try:
             response = await handle_rate_limits(
-                client,
+                client = client,
+                method="POST",
+                data=data,
                 endpoint="https://accounts.spotify.com/api/token",
                 max_retries=3
             )
