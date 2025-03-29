@@ -12,8 +12,8 @@ export const MusicRecommendations: React.FC<MusicRecommendationsProps> = ({
   currentMood 
 }) => {
   return (
-    <div className="flex-1">
-      <div className="mb-4">
+    <div className="flex-1 h-full">
+      <div className="mb-4 sticky top-0 bg-background/95 backdrop-blur z-10 pt-2 pb-4">
         <h2 className="text-xl font-semibold mb-1">
           {currentMood 
             ? `${currentMood.charAt(0).toUpperCase() + currentMood.slice(1)} Playlists` 
@@ -26,7 +26,7 @@ export const MusicRecommendations: React.FC<MusicRecommendationsProps> = ({
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 h-[calc(100%-80px)] overflow-y-auto pb-4">
         {playlists.map((playlist) => (
           <a
             key={playlist.id}

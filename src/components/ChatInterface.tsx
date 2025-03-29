@@ -30,49 +30,41 @@ export const ChatInterface: React.FC = () => {
     checkAuth();
   }, []);
 
-  const handleSendMessage = async (inputValue: string) => {
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputValue,
-      isUser: true
+// Update the handleSendMessage function
+const handleSendMessage = async (inputValue: string) => {
+  const userMessage: Message = {
+    id: Date.now().toString(),
+    text: inputValue,
+    isUser: true
+  };
+  
+  setMessages(prev => [...prev, userMessage]);
+  setIsLoading(true);
+
+  try {
+    const { detectedMood, playlists, botResponse } = await processUserMessage(inputValue);
+    setCurrentMood(detectedMood);
+    setRecommendedPlaylists(playlists);
+
+    const botReply: Message = {
+      id: (Date.now() + 1).toString(),
+      text: botResponse, // Use generated response
+      isUser: false,
+      detectedMood,
     };
     
-    setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
-  
-    try {
-      const { detectedMood, playlists } = await processUserMessage(inputValue);
-      setCurrentMood(detectedMood);
-      
-      if (playlists.length === 0) {
-        throw new Error('No playlists found');
-      }
-  
-      setRecommendedPlaylists(playlists);
-  
-      const botReply: Message = {
-        id: (Date.now() + 1).toString(),
-        text: `I sense you're feeling ${detectedMood}. Here are some playlists that match your mood!`,
-        isUser: false,
-        detectedMood,
-      };
-      
-      setMessages(prev => [...prev, botReply]);
-    } catch (error) {
-      console.error('Error:', error);
-      const errorMessage = error instanceof Error && error.message.includes('No playlists')
-        ? "Couldn't find any playlists for that mood. Try another one!"
-        : "Sorry, I encountered an error. Please try again.";
-      
-      setMessages(prev => [...prev, {
-        id: Date.now().toString(),
-        text: errorMessage,
-        isUser: false
-      }]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setMessages(prev => [...prev, botReply]);
+  } catch (error) {
+    console.error('Error:', error);
+    setMessages(prev => [...prev, {
+      id: Date.now().toString(),
+      text: "Let's try that again - how are you feeling right now?",
+      isUser: false
+    }]);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleMoodSelection = async (mood: MoodType) => {
     setCurrentMood(mood);
@@ -117,11 +109,11 @@ export const ChatInterface: React.FC = () => {
   <div className="min-h-screen flex flex-col bg-gradient-to-r bg-black">
     <Header/>
     <div className="app-container min-h-screen rounded-3xl bg-gradient-to-b from-background via-background/95 to-background/90">
-      <div className="flex flex-col md:flex-row gap-6 lg:gap-10 h-full relative">
+      <div className="flex flex-col md:flex-row gap-6 lg:gap-10 h-[calc(100vh-160px)] relative">
         <div className="flex-1 flex flex-col h-full overflow-hidden">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-3xl font-bold text-gradient">
-              Moody Agent
+              PersonalAi's
               <span className="ml-2 inline-flex items-center text-sm font-normal text-muted-foreground">
                 Your AI Music Companion
               </span>
@@ -154,7 +146,7 @@ export const ChatInterface: React.FC = () => {
           <MessageInput onSendMessage={handleSendMessage} isLoading={isLoading} />
         </div>
         
-        <div className="md:w-[380px] lg:w-[420px]">
+        <div className="md:w-[380px] lg:w-[420px] h-full overflow-y-auto pb-4  custom-scrollbar">
         <MusicRecommendations 
               playlists={recommendedPlaylists} 
               currentMood={currentMood} 
