@@ -39,12 +39,17 @@ export const ChatInterface: React.FC = () => {
     
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
-
+  
     try {
       const { detectedMood, playlists } = await processUserMessage(inputValue);
       setCurrentMood(detectedMood);
+      
+      if (playlists.length === 0) {
+        throw new Error('No playlists found');
+      }
+  
       setRecommendedPlaylists(playlists);
-
+  
       const botReply: Message = {
         id: (Date.now() + 1).toString(),
         text: `I sense you're feeling ${detectedMood}. Here are some playlists that match your mood!`,
@@ -55,9 +60,13 @@ export const ChatInterface: React.FC = () => {
       setMessages(prev => [...prev, botReply]);
     } catch (error) {
       console.error('Error:', error);
+      const errorMessage = error instanceof Error && error.message.includes('No playlists')
+        ? "Couldn't find any playlists for that mood. Try another one!"
+        : "Sorry, I encountered an error. Please try again.";
+      
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
-        text: "Sorry, I couldn't fetch playlists. Please try again.",
+        text: errorMessage,
         isUser: false
       }]);
     } finally {
@@ -79,6 +88,9 @@ export const ChatInterface: React.FC = () => {
 
     try {
       const playlists = await fetchPlaylists(mood);
+      if (playlists.length === 0) {
+        throw new Error('No playlists found');
+      }
       setRecommendedPlaylists(playlists);
 
       const botReply: Message = {
@@ -91,6 +103,11 @@ export const ChatInterface: React.FC = () => {
       setMessages(prev => [...prev, botReply]);
     } catch (error) {
       console.error('Error:', error);
+    setMessages(prev => [...prev, {
+      id: Date.now().toString(),
+      text: "Sorry, we couldn't find any playlists for this mood. Try another one!",
+      isUser: false
+    }]);
     } finally {
       setIsLoading(false);
     }

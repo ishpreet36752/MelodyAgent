@@ -42,7 +42,7 @@ export const fetchPlaylists = async (mood: MoodType): Promise<Playlist[]> => {
       `https://api.spotify.com/v1/search`,
       {
         params: {
-          q: `${mood} mood`,
+          q: `${mood}`,
           type: 'playlist',
           limit: 10,
           market: 'US'
@@ -53,32 +53,39 @@ export const fetchPlaylists = async (mood: MoodType): Promise<Playlist[]> => {
       }
     );
 
-    return response.data.playlists.items.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      image: item.images[0]?.url || '/default-playlist.png',
-      url: item.external_urls.spotify,
-      tracks: item.tracks.total,
-      owner: item.owner.display_name
-    }));
+    const items = response.data.playlists?.items || [];
+    
+    return items
+      .filter(item => item?.id) // Filter out null/undefined items
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        image: item.images?.[0]?.url || '/default-playlist.png', // Optional chaining
+        url: item.external_urls?.spotify || '#',
+        tracks: item.tracks?.total || 0,
+        owner: item.owner?.display_name || 'Unknown Artist'
+      }));
+
   } catch (error) {
     console.error('Playlist fetch error:', error);
-    localStorage.removeItem('spotify_access_token');
-    localStorage.removeItem('spotify_refresh_token');
-    localStorage.removeItem('spotify_token_timestamp');
-    window.location.href = '/';
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      localStorage.removeItem('spotify_access_token');
+      localStorage.removeItem('spotify_refresh_token');
+      localStorage.removeItem('spotify_token_timestamp');
+      window.location.href = '/';
+    }
     throw error;
   }
 };
 export const detectMood = (text: string): MoodType => {
   const lowerText = text.toLowerCase();
   const moodMap: Record<MoodType, RegExp[]> = {
-    happy: [/happy/, /joy/, /great/, /excited/],
-    sad: [/sad/, /upset/, /depressed/, /down/],
-    energetic: [/energetic/, /hyper/, /pumped/, /workout/],
-    calm: [/calm/, /relax/, /peaceful/, /chill/],
-    focus: [/focus/, /concentrate/, /study/, /work/]
+    happy: [/happy/, /joy/, /great/, /excited/, /good/, /awesome/],
+    sad: [/sad/, /upset/, /depressed/, /down/, /lonely/, /bad/],
+    energetic: [/energetic/, /hyper/, /pumped/, /workout/, /party/, /dance/],
+    calm: [/calm/, /relax/, /peaceful/, /chill/, /mellow/, /quiet/],
+    focus: [/focus/, /concentrate/, /study/, /work/, /read/, /code/]
   };
 
   for (const [mood, patterns] of Object.entries(moodMap)) {
@@ -87,8 +94,8 @@ export const detectMood = (text: string): MoodType => {
     }
   }
 
-  const moods: MoodType[] = ['happy', 'sad', 'energetic', 'calm', 'focus'];
-  return moods[Math.floor(Math.random() * moods.length)];
+  // Fallback to most common mood if none detected
+  return 'happy';
 };
 
 export const processUserMessage = async (text: string) => {
