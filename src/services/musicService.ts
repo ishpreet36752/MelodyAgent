@@ -203,3 +203,62 @@ export async function processUserMessage(text: string) {
     throw new Error('Failed to process message. Please try again.');
   }
 }
+
+
+export const getCurrentlyPlayingTrackId = async (): Promise<string | null> => {
+  try {
+    let accessToken = localStorage.getItem('spotify_access_token');
+    if (checkTokenExpiration()) accessToken = await refreshToken();
+
+    const response = await axios.get(
+      'https://api.spotify.com/v1/me/player/currently-playing',
+      {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      }
+    );
+    const isPlaying = response.data;
+  console.log('Current track ', isPlaying);
+    return response.data?.item?.id || null;
+    
+  } catch (error) {
+    console.error('Error fetching current track:', error);
+    return null;
+  }
+};
+
+
+export const getTrackRecommendations = async (trackId: string): Promise<Playlist[]> => {
+  try {
+    const response = await axios.get(
+      'https://api.reccobeats.com/v1/track/recommendation',
+      {
+        params: {
+          seeds: [trackId],
+          size: 10,
+          market: 'US'
+        },
+        headers: { Accept: `application/json` }
+      }
+    );
+
+    return response.data.tracks.map((track: any) => ({
+      id: track.id,
+      name: track.name,
+      description: track.artists[0]?.name || 'Various Artists',
+      image: track.album?.images?.[0]?.url || '/default-track.png',
+      url: track.external_urls?.spotify || '#',
+      tracks: 0, // Not available in response
+      owner: track.artists[0]?.name || 'Unknown Artist'
+    }));
+  } catch (error) {
+    console.error('ReccoBeats recommendation error:', error);
+    throw new Error('Failed to get recommendations');
+  }
+};
+
+
+export const getCurrentTrackRecommendations = async () => {
+  const trackId = await getCurrentlyPlayingTrackId();
+  if (!trackId) throw new Error('No track currently playing');
+  return getTrackRecommendations(trackId);
+};

@@ -15,5 +15,12 @@ export interface Playlist {
   tracks: number;
   owner: string;
 }
+export interface CurrentTrack {
+  id: string;
+  name: string;
+  artist: string;
+  image: string;
+  isPlaying: boolean;
+}
 
 export type MoodType = 'happy' | 'sad' | 'energetic' | 'calm' | 'focus';
