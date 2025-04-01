@@ -125,7 +125,7 @@ async function detectEmotion(text: string): Promise<MoodType> {
   }
 }
 
-/** @deprecated Fallback method */
+
 function detectMoodFallback(text: string): MoodType {
   const lowerText = text.toLowerCase();
   const moodMap: Record<MoodType, RegExp[]> = {
@@ -168,14 +168,12 @@ User is feeling ${mood}. Generate an appropriate response that:
       }
     });
 
-    // Clean up the response
     let generated = response.generated_text
       .replace(prompt, '')
       .replace(/<\/?s>/g, '')
       .replace(/<\/?INST>/g, '')
       .trim();
 
-    // Fallback if empty
     return generated || `I understand feeling ${mood}. Let's find the perfect music to match your mood.`;
   } catch (error) {
     console.error('Conversation generation failed:', error);
