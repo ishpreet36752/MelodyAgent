@@ -229,7 +229,7 @@ export const getCurrentlyPlayingTrackId = async (): Promise<string | null> => {
 
 export const getTrackRecommendations = async (trackId: string): Promise<Playlist[]> => {
   try {
-    // 1. Get recommendations from ReccoBeats
+   
     const reccoResponse = await axios.get(
       'https://api.reccobeats.com/v1/track/recommendation',
       {
@@ -240,10 +240,9 @@ export const getTrackRecommendations = async (trackId: string): Promise<Playlist
 
     console.log('ReccoBeats raw response:', reccoResponse.data);
 
-    // 2. Extract and validate Spotify track IDs
+  
     const recommendations = reccoResponse.data.content.map((item: any) => {
       try {
-        // Extract Spotify ID from href
         const url = new URL(item.href);
         const pathParts = url.pathname.split('/');
         const spotifyId = pathParts[pathParts.indexOf('track') + 1];
