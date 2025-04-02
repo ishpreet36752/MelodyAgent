@@ -78,6 +78,7 @@ MoodMelody is a music recommendation application that analyzes user messages to 
   - Formats into consistent UI structure
 
 * [Current Track Recommendations](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L303-L307) - Convenience function combining the above steps
+-Here I mixed the reccoBeats API with the spotify get tracks api endpint as the recconBeats API does not have the image url as the response so I used the spotify get tracks api to get the image url
 
 ![Track Recommendations](screenshot_placeholder.png)
 *Screenshot planned: Example of track recommendations UI with currently playing track*
