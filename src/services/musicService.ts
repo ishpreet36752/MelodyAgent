@@ -216,7 +216,7 @@ export const getCurrentlyPlayingTrackId = async (): Promise<string | null> => {
         headers: { Authorization: `Bearer ${accessToken}` }
       }
     );
-    const isPlaying = response.data;
+    const isPlaying = response.data.item;
   console.log('Current track ', isPlaying);
     return response.data?.item?.id || null;
     
@@ -229,33 +229,82 @@ export const getCurrentlyPlayingTrackId = async (): Promise<string | null> => {
 
 export const getTrackRecommendations = async (trackId: string): Promise<Playlist[]> => {
   try {
-    const response = await axios.get(
+    // 1. Get recommendations from ReccoBeats
+    const reccoResponse = await axios.get(
       'https://api.reccobeats.com/v1/track/recommendation',
       {
-        params: {
-          seeds: [trackId],
-          size: 10,
-          market: 'US'
-        },
+        params: { seeds: trackId, size: 10 },
         headers: { Accept: `application/json` }
       }
     );
 
-    return response.data.tracks.map((track: any) => ({
-      id: track.id,
-      name: track.name,
-      description: track.artists[0]?.name || 'Various Artists',
-      image: track.album?.images?.[0]?.url || '/default-track.png',
-      url: track.external_urls?.spotify || '#',
-      tracks: 0, // Not available in response
-      owner: track.artists[0]?.name || 'Unknown Artist'
-    }));
+    console.log('ReccoBeats raw response:', reccoResponse.data);
+
+    // 2. Extract and validate Spotify track IDs
+    const recommendations = reccoResponse.data.content.map((item: any) => {
+      try {
+        // Extract Spotify ID from href
+        const url = new URL(item.href);
+        const pathParts = url.pathname.split('/');
+        const spotifyId = pathParts[pathParts.indexOf('track') + 1];
+        
+        // Validate ID format
+        if (!spotifyId || !/^[a-zA-Z0-9]{22}$/.test(spotifyId)) {
+          console.warn('Invalid Spotify ID:', spotifyId, 'in item:', item);
+          return null;
+        }
+        
+        return { ...item, spotifyId };
+      } catch (error) {
+        console.warn('Error processing href:', item.href, error);
+        return null;
+      }
+    }).filter(Boolean);
+
+    if (recommendations.length === 0) {
+      throw new Error('No valid Spotify track IDs found in recommendations');
+    }
+
+    const spotifyIds = recommendations.map((item: any) => item.spotifyId);
+    const spotifyResponse = await axios.get(
+      'https://api.spotify.com/v1/tracks',
+      {
+        params: { ids: spotifyIds.join(','), market: 'US' },
+        headers: { Authorization: `Bearer ${localStorage.getItem('spotify_access_token')}` }
+      }
+    );
+
+    console.log('Spotify response:', spotifyResponse.data);
+
+    const spotifyTracksMap = new Map(
+      spotifyResponse.data.tracks.map((track: any) => [track.id, track])
+    );
+
+   
+    return recommendations.map((reccoTrack: any) => {
+      const spotifyTrack = spotifyTracksMap.get(reccoTrack.spotifyId) || {};
+      
+      return {
+        id: reccoTrack.spotifyId,
+        name: spotifyTrack.name || reccoTrack.trackTitle,
+        description: spotifyTrack.artists?.[0]?.name || reccoTrack.artists?.[0]?.name || 'Various Artists',
+        image: spotifyTrack.album?.images?.[0]?.url || '/default-track.png',
+        url: spotifyTrack.external_urls?.spotify || reccoTrack.href,
+        // owner: spotifyTrack.artists?.[0]?.name || reccoTrack.artists?.[0]?.name || 'Unknown Artist',
+        // duration: spotifyTrack.duration_ms || 0,
+        // popularity: spotifyTrack.popularity || 0
+      };
+    });
+
   } catch (error) {
-    console.error('ReccoBeats recommendation error:', error);
-    throw new Error('Failed to get recommendations');
+    console.error('Recommendation error:', error);
+    throw new Error(`Failed to get recommendations: ${
+      axios.isAxiosError(error) 
+        ? error.response?.data?.error?.message || error.message 
+        : error instanceof Error ? error.message : 'Unknown error'
+    }`);
   }
 };
-
 
 export const getCurrentTrackRecommendations = async () => {
   const trackId = await getCurrentlyPlayingTrackId();

@@ -220,6 +220,7 @@ const handleSendMessage = async (inputValue: string) => {
         </div>
       </div>
     </div>
+    
   </div>
   </>
   );
