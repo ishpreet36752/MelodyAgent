@@ -25,10 +25,6 @@ MoodMelody is a music recommendation application that analyzes user messages to 
 * [Token Expiration Check](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L32-L35) - Verifies if token needs refreshing
 * [Token Refresh Function](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L37-L52) - Requests new tokens from backend
 
-### Authentication Flow Diagram
-
-![Authentication Flow Diagram](screenshot_placeholder.png)
-*Screenshot planned: Diagram showing the OAuth flow from user login to token storage*
 
 ## 3. Mood Detection System
 
@@ -42,7 +38,7 @@ MoodMelody is a music recommendation application that analyzes user messages to 
 
 * [Conversational Response](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L159-L189) - Creates human-like responses to user messages
 
-![Mood Detection Example](screenshot_placeholder.png)
+![Mood Detection Example](assets/Screenshot%202025-04-03%20005104.png)
 *Screenshot planned: Example of user message and detected mood visualization*
 
 ## 4. Playlist Recommendation System
@@ -61,7 +57,7 @@ MoodMelody is a music recommendation application that analyzes user messages to 
   - Formats response into consistent data structure
   - Manages API errors including rate limiting
 
-![Playlist Recommendations](screenshot_placeholder.png)
+![Playlist Recommendations](assets/convo.png)
 *Screenshot planned: Example of recommended playlists with UI components*
 
 ## 5. Currently Playing Track Recommendations
@@ -80,7 +76,7 @@ MoodMelody is a music recommendation application that analyzes user messages to 
 * [Current Track Recommendations](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L303-L307) - Convenience function combining the above steps
 -Here I mixed the reccoBeats API with the spotify get tracks api endpint as the recconBeats API does not have the image url as the response so I used the spotify get tracks api to get the image url
 
-![Track Recommendations](screenshot_placeholder.png)
+![Track Recommendations](assets/recommend.png)
 *Screenshot planned: Example of track recommendations UI with currently playing track*
 
 ## 6. Rate Limiting and Error Handling
@@ -94,5 +90,3 @@ MoodMelody is a music recommendation application that analyzes user messages to 
 * [Playlist Fetch Error Handling](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L85-L96) - Manages 401 and 429 errors
 * [Recommendation Error Handling](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L294-L301) - Detailed error reporting
 
-![Error Handling](screenshot_placeholder.png)
-*Screenshot planned: Example of graceful error handling in the UI*
