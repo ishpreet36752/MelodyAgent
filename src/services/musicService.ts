@@ -310,3 +310,18 @@ export const getCurrentTrackRecommendations = async () => {
   if (!trackId) throw new Error('No track currently playing');
   return getTrackRecommendations(trackId);
 };
+
+
+
+// const fetchAudioFeatures = async (trackId: string) => {
+//   const response = await axios.post(
+//     'https://api.reccobeats.com/v1/analyze',
+//     { track_id: trackId },
+//     { headers: { Accept: `application/json` } }
+//   );
+//   return response.data.features; // { energy: 0.75, tempo: 115, ... }
+// };
+
+
+
+// fetchAudioFeatures()

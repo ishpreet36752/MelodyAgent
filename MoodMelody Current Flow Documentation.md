@@ -9,21 +9,21 @@ MoodMelody is a music recommendation application that analyzes user messages to 
 **Backend**: FastAPI server handling Spotify OAuth and token management
 **Frontend**: React/TypeScript client with mood detection and playlist UI
 
-[View Project on GitHub](https://github.com/yourusername/moodmelody)
+[View Project on GitHub](https://github.com/KaranSingh36752/MelodyAgent)
 
 ## 2. Authentication Flow
 
 ### Backend Authentication Endpoints
 
-* [Login Endpoint](https://github.com/yourusername/moodmelody/blob/main/backend/main.py#L40-L50) - Initiates the Spotify OAuth flow
-* [Callback Endpoint](https://github.com/yourusername/moodmelody/blob/main/backend/main.py#L52-L92) - Exchanges auth code for tokens
-* [Refresh Token Endpoint](https://github.com/yourusername/moodmelody/blob/main/backend/main.py#L94-L121) - Renews expired access tokens
+* [Login Endpoint](https://github.com/KaranSingh36752/MelodyAgent/blob/main/backend/main.py#L40-L50) - Initiates the Spotify OAuth flow
+* [Callback Endpoint](https://github.com/KaranSingh36752/MelodyAgent/blob/main/backend/main.py#L52-L92) - Exchanges auth code for tokens
+* [Refresh Token Endpoint](https://github.com/KaranSingh36752/MelodyAgent/blob/main/backend/main.py#L94-L121) - Renews expired access tokens
 
 ### Frontend Token Management
 
-* [Token Storage](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L25-L30) - Retrieves tokens from localStorage
-* [Token Expiration Check](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L32-L35) - Verifies if token needs refreshing
-* [Token Refresh Function](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L37-L52) - Requests new tokens from backend
+* [Token Storage](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L25-L30) - Retrieves tokens from localStorage
+* [Token Expiration Check](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L32-L35) - Verifies if token needs refreshing
+* [Token Refresh Function](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L37-L52) - Requests new tokens from backend
 
 ### Authentication Flow Diagram
 
@@ -34,13 +34,13 @@ MoodMelody is a music recommendation application that analyzes user messages to 
 
 ### Emotion Classification
 
-* [Emotion Mapping](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L13-L24) - Converts detected emotions to music moods
-* [Primary Detection](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L125-L137) - Uses Hugging Face model for sentiment analysis
-* [Fallback Detection](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L140-L157) - Text-based mood detection when API fails
+* [Emotion Mapping](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L13-L24) - Converts detected emotions to music moods
+* [Primary Detection](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L125-L137) - Uses Hugging Face model for sentiment analysis
+* [Fallback Detection](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L140-L157) - Text-based mood detection when API fails
 
 ### Response Generation
 
-* [Conversational Response](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L159-L189) - Creates human-like responses to user messages
+* [Conversational Response](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L159-L189) - Creates human-like responses to user messages
 
 ![Mood Detection Example](screenshot_placeholder.png)
 *Screenshot planned: Example of user message and detected mood visualization*
@@ -49,14 +49,14 @@ MoodMelody is a music recommendation application that analyzes user messages to 
 
 ### User Message Processing
 
-* [Process User Message](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L191-L212) - Main entry point for user interactions
+* [Process User Message](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L191-L212) - Main entry point for user interactions
   - Detects mood from user message
   - Fetches playlists based on mood
   - Generates conversational response
 
 ### Playlist Fetching 
 
-* [Fetch Playlists](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L54-L97) - Retrieves playlists from Spotify API based on mood
+* [Fetch Playlists](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L54-L97) - Retrieves playlists from Spotify API based on mood
   - Handles token refresh when needed
   - Formats response into consistent data structure
   - Manages API errors including rate limiting
@@ -68,16 +68,16 @@ MoodMelody is a music recommendation application that analyzes user messages to 
 
 ### Current Track Detection
 
-* [Get Currently Playing Track](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L215-L231) - Retrieves current track from Spotify
+* [Get Currently Playing Track](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L215-L231) - Retrieves current track from Spotify
 
 ### Similar Track Recommendations
 
-* [Get Track Recommendations](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L234-L301) - Uses ReccoBeats API to find similar tracks
+* [Get Track Recommendations](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L234-L301) - Uses ReccoBeats API to find similar tracks
   - Fetches recommendations based on seed track
   - Retrieves detailed track information from Spotify
   - Formats into consistent UI structure
 
-* [Current Track Recommendations](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L303-L307) - Convenience function combining the above steps
+* [Current Track Recommendations](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L303-L307) - Convenience function combining the above steps
 
 ![Track Recommendations](screenshot_placeholder.png)
 *Screenshot planned: Example of track recommendations UI with currently playing track*
@@ -86,12 +86,12 @@ MoodMelody is a music recommendation application that analyzes user messages to 
 
 ### Backend Rate Limit Management
 
-* [Rate Limit Handler](https://github.com/yourusername/moodmelody/blob/main/backend/main.py#L27-L48) - Implements intelligent retry logic for Spotify API
+* [Rate Limit Handler](https://github.com/KaranSingh36752/MelodyAgent/blob/main/backend/main.py#L27-L48) - Implements intelligent retry logic for Spotify API
 
 ### Frontend Error Handling
 
-* [Playlist Fetch Error Handling](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L85-L96) - Manages 401 and 429 errors
-* [Recommendation Error Handling](https://github.com/yourusername/moodmelody/blob/main/src/services/musicService.ts#L294-L301) - Detailed error reporting
+* [Playlist Fetch Error Handling](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L85-L96) - Manages 401 and 429 errors
+* [Recommendation Error Handling](https://github.com/KaranSingh36752/MelodyAgent/blob/main/src/services/musicService.ts#L294-L301) - Detailed error reporting
 
 ![Error Handling](screenshot_placeholder.png)
 *Screenshot planned: Example of graceful error handling in the UI*
