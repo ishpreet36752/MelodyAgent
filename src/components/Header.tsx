@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import UserProfile from "./UserProfile";
 import { LogOut } from 'lucide-react';
-
+import { useLocation } from "react-router-dom";
 export const Header: React.FC = () => {
   const accessToken = localStorage.getItem("spotify_access_token");
   
@@ -22,9 +22,10 @@ export const Header: React.FC = () => {
       console.error('Error signing out:', error);
     }
   };
-
+  const location = useLocation();
   return (
     <header className="py-6 px-4 md:px-6 flex items-center justify-between animate-fade-in">
+     
       <Link to={"/"}>
         <div className="flex items-center gap-2">
           <AnimatedLogo />

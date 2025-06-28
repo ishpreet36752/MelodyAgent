@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Index = () => {
   const texts = [
@@ -20,39 +21,115 @@ const Index = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10,
+      },
+    },
+  };
+
+  const buttonVariants = {
+    hover: {
+      scale: 1.05,
+      boxShadow: "0px 0px 8px rgba(255,255,255,0.3)",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10,
+      },
+    },
+    tap: { scale: 0.95 },
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-r bg-black">
       <Header />
-      <div className="app-container flex-1 flex flex-col">
+      <motion.div 
+        className="app-container flex-1 flex flex-col"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
         <div className="pt-8 pb-16 flex-1 flex flex-col">
-          <div className="text-center mb-12 animate-fade-in">
-            <div className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary mb-2">
+          <motion.div 
+            className="text-center mb-12"
+            variants={itemVariants}
+          >
+            <motion.div 
+              className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary mb-2"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }}
+            >
               AI-Powered Music Assistant
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight text-primary/80">
+            </motion.div>
+            <motion.h1 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight text-primary/80"
+              variants={itemVariants}
+            >
               Your <span className="text-gradient">Mood</span>, Your{" "}
               <span className="text-gradient">Music</span>
-            </h1>
-            <p className=" max-w-xl mx-auto text-base md:text-lg text-primary/80">
+            </motion.h1>
+            <motion.p 
+              className="max-w-xl mx-auto text-base md:text-lg text-primary/80"
+              variants={itemVariants}
+            >
               Chat with our AI to discover music that matches exactly how you
               feel. No more endless scrolling, just tell us your mood.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          <div className="flex-1   rounded-2xl p-4  animate-scale-in">
+          <motion.div 
+            className="flex-1 rounded-2xl p-4"
+            variants={itemVariants}
+          >
             {/* <ChatInterface /> */}
             <div className="flex justify-center">
               <Link to={"/dashboard"}>
-                <button className=" bg-primary/70 p-4 rounded-3xl text-xl font-semibold">
+                <motion.button 
+                  className="bg-primary/70 p-4 rounded-3xl text-xl font-semibold"
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  animate={{
+                    scale: [1, 1.03, 1],
+                    transition: {
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }
+                  }}
+                >
                   {texts[index]}
-                </button>
+                </motion.button>
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="fixed inset-0 -z-10 bg-gradient-radial from-white to-background opacity-80 pointer-events-none"></div>
+      <motion.div 
+        className="fixed inset-0 -z-10 bg-gradient-radial from-white to-background opacity-80 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.8 }}
+        transition={{ duration: 1.5 }}
+      ></motion.div>
     </div>
   );
 };
