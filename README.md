@@ -157,3 +157,9 @@ SPOTIFY_CLIENT_SECRET=your_client_secret
 REDIRECT_URI=http://localhost:8080/callback
 ```
 
+## 📝 Notes
+
+- Ensure Spotify Developer account is set up
+- Configure correct redirect URIs in Spotify Dashboard
+- Handle token refresh mechanism
+- Implement error boundaries for production
