@@ -163,3 +163,4 @@ REDIRECT_URI=http://localhost:8080/callback
 - Configure correct redirect URIs in Spotify Dashboard
 - Handle token refresh mechanism
 - Implement error boundaries for production
+- updating some stuff
