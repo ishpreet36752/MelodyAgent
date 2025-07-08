@@ -8,7 +8,7 @@ interface MessageListProps {
   isLoading: boolean;
 }
 
-export const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
+export const MessageList: React.FC<MessageListProps> = ({ messages, isLoading, showMessageList }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const scrollToBottom = () => {

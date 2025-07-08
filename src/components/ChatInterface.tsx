@@ -23,6 +23,7 @@ export const ChatInterface: React.FC = () => {
   const [recommendedPlaylists, setRecommendedPlaylists] = useState<Playlist[]>(
     []
   );
+  // const [showMessageList , setShowMessageList] = useState(false); // Remove this state
   const [currentTrack, setCurrentTrack] = useState<CurrentTrack | null>(null);
 
   const moods: MoodType[] = ["happy", "sad", "energetic", "calm", "focus"];
@@ -150,6 +151,9 @@ export const ChatInterface: React.FC = () => {
     }
   };
 
+  // Determine if chat components should be visible
+  const shouldShowChat = messages.length > 1;
+
   return (
     <>
       <div className="min-h-full flex flex-col bg-gradient-to-r bg-black/90">
@@ -191,21 +195,23 @@ export const ChatInterface: React.FC = () => {
           <div className="flex flex-col md:flex-row gap-6  lg:gap-10 h-[calc(100vh-160px)] relative ">
             <div className="flex-1 flex flex-col h-full overflow-hidden">
               <div className="flex-1 inset-card mb-6 overflow-hidden">
-                <MessageList messages={messages} isLoading={isLoading} />
-                <div className="mt-28">
+                {shouldShowChat && (
+                  <MessageList messages={messages} isLoading={isLoading} />
+                )}
+                {/* <div className="mt-28">
                   <MoodSelector
                     moods={moods}
                     currentMood={currentMood}
                     onMoodSelect={handleMoodSelection}
                   />
-                </div>
+                </div> */}
                 {/* <StarBorder
                   color="cyan"
                   speed="4s"
                   thickness={2}
                 > */}
                   <div className="">
-                    <MessageInput
+                    <MessageInput 
                       onSendMessage={handleSendMessage}
                       isLoading={isLoading}
                     />
@@ -214,12 +220,14 @@ export const ChatInterface: React.FC = () => {
               </div>
             </div>
 
-            {/* <div className="md:w-[380px] lg:w-[420px] h-full overflow-y-auto pb-4  custom-scrollbar">
-        <MusicRecommendations 
-              playlists={recommendedPlaylists} 
-              currentMood={currentMood} 
-            />
-        </div> */}
+            {shouldShowChat && (
+              <div className="md:w-[380px] lg:w-[420px] h-full overflow-y-auto pb-4  custom-scrollbar">
+                <MusicRecommendations 
+                  playlists={recommendedPlaylists} 
+                  currentMood={currentMood} 
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
