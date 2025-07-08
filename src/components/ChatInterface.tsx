@@ -8,6 +8,7 @@ import { processUserMessage, fetchPlaylists } from "../services/musicService";
 import { Header } from "./Header";
 import axios from "axios";
 import StarBorder from "@/ui/StarBorder";
+import ClickSpark from "@/ui/ClickSpark";
 
 export const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -156,9 +157,16 @@ export const ChatInterface: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-full flex flex-col bg-gradient-to-r bg-black/90">
-        <Header />
-        <div className="app-container min-w-full rounded-3xl bg-gradient-to-b from-primary-foreground via-primary/90 to-primary-foreground/90">
+      <div className="min-h-screen flex flex-col bg-gradient-to-r bg-black/90">
+      <ClickSpark 
+      sparkColor='#000'
+  sparkSize={10}
+  sparkRadius={15}
+  sparkCount={8}
+  duration={400}
+      >
+        {/* <Header /> */}
+        <div className="app-container min-w-full min-h-screen rounded-3xl bg-gradient-to-b from-primary-foreground via-primary/90 to-primary-foreground/90">
           <div className="min-w-full flex justify-center items-center">
             <div className="flex cursor-pointer justify-center items-center h-12 w-auto -mt-4 mb-2 px-4 bg-gradient-to-r from-background to-background/80 rounded-3xl gap-2">
               {currentTrack ? (
@@ -230,6 +238,7 @@ export const ChatInterface: React.FC = () => {
             )}
           </div>
         </div>
+        </ClickSpark>
       </div>
     </>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import ClickSpark from "@/ui/ClickSpark";
 
 const Index = () => {
   const texts = [
@@ -59,7 +60,15 @@ const Index = () => {
   };
 
   return (
+    
     <div className="min-h-screen flex flex-col bg-gradient-to-r bg-black">
+      <ClickSpark
+  sparkColor='#fff'
+  sparkSize={10}
+  sparkRadius={15}
+  sparkCount={8}
+  duration={400}
+>
       <Header />
       <motion.div 
         className="app-container flex-1 flex flex-col"
@@ -130,6 +139,7 @@ const Index = () => {
         animate={{ opacity: 0.8 }}
         transition={{ duration: 1.5 }}
       ></motion.div>
+      </ClickSpark>
     </div>
   );
 };

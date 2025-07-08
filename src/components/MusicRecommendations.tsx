@@ -35,9 +35,9 @@ export const MusicRecommendations: React.FC<MusicRecommendationsProps> = ({
 
   return (
     <div className="flex-1 h-full">
-      <div className="flex justify-between mb-4 sticky top-0 bg-background/95 backdrop-blur z-10 pt-2 pb-4">
+      <div className="flex justify-between mb-4 sticky top-0 bg-background/95 backdrop-blur z-10 pt-2 pb-4 rounded-2xl">
         <div>
-          <h2 className="text-xl font-semibold mb-1">
+          <h2 className="text-sm font-semibold mb-1">
             {showSongs 
               ? 'Recommended Songs' 
               : currentMood 
@@ -54,7 +54,7 @@ export const MusicRecommendations: React.FC<MusicRecommendationsProps> = ({
         </div>
         <div className='flex shadow-xl backdrop-blur rounded-full p-2'>
           <button 
-            className='text-md font-semibold hover:text-primary transition-colors'
+            className='text-sm font-semibold hover:text-primary transition-colors'
             onClick={() => setShowSongs(!showSongs)}
           >
             {showSongs ? 'Playlists' : 'Songs'}
