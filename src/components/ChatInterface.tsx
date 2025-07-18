@@ -7,8 +7,8 @@ import { MusicRecommendations } from "./MusicRecommendations";
 import { processUserMessage, fetchPlaylists } from "../services/musicService";
 import { Header } from "./Header";
 import axios from "axios";
-import StarBorder from "@/ui/StarBorder";
 import ClickSpark from "@/ui/ClickSpark";
+import { useCurrentTrack } from "../hooks/useCurrentTrack";
 
 export const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -25,7 +25,7 @@ export const ChatInterface: React.FC = () => {
     []
   );
   // const [showMessageList , setShowMessageList] = useState(false); // Remove this state
-  const [currentTrack, setCurrentTrack] = useState<CurrentTrack | null>(null);
+  const { currentTrack, pollCurrentTrack } = useCurrentTrack();
 
   const moods: MoodType[] = ["happy", "sad", "energetic", "calm", "focus"];
 
@@ -35,39 +35,11 @@ export const ChatInterface: React.FC = () => {
       if (!accessToken) window.location.href = "/";
     };
     checkAuth();
-    const pollCurrentTrack = async () => {
-      try {
-        const accessToken = localStorage.getItem("spotify_access_token");
-        if (!accessToken) return;
-
-        const response = await axios.get(
-          "https://api.spotify.com/v1/me/player/currently-playing",
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
-
-        if (response.data?.item) {
-          setCurrentTrack({
-            id: response.data.item.id,
-            name: response.data.item.name,
-            artist: response.data.item.artists[0]?.name || "Unknown Artist",
-            image:
-              response.data.item.album?.images?.[0]?.url ||
-              "/default-track.png",
-            isPlaying: response.data.is_playing,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching current track:", error);
-      }
-    };
-
     pollCurrentTrack();
     // interval for polling every 10 seconds
     const interval = setInterval(pollCurrentTrack, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [pollCurrentTrack]);
 
   // Update the handleSendMessage function
   const handleSendMessage = async (inputValue: string) => {
@@ -167,6 +139,7 @@ export const ChatInterface: React.FC = () => {
       >
         {/* <Header /> */}
         <div className="app-container min-w-full min-h-screen rounded-3xl bg-gradient-to-b from-primary-foreground via-primary/90 to-primary-foreground/90">
+          {/* Now playing */}
           <div className="min-w-full flex justify-center items-center">
             <div className="flex cursor-pointer justify-center items-center h-12 w-auto -mt-4 mb-2 px-4 bg-gradient-to-r from-background to-background/80 rounded-3xl gap-2">
               {currentTrack ? (
@@ -200,6 +173,7 @@ export const ChatInterface: React.FC = () => {
               )}
             </div>
           </div>
+          {/* Chat Interface */}
           <div className="flex flex-col md:flex-row gap-6  lg:gap-10 h-[calc(100vh-160px)] relative ">
             <div className="flex-1 flex flex-col h-full overflow-hidden">
               <div className="flex-1 inset-card mb-6 overflow-hidden">
@@ -213,18 +187,12 @@ export const ChatInterface: React.FC = () => {
                     onMoodSelect={handleMoodSelection}
                   />
                 </div> */}
-                {/* <StarBorder
-                  color="cyan"
-                  speed="4s"
-                  thickness={2}
-                > */}
-                  <div className="">
+                  <div className={`${shouldShowChat ? '' : 'mt-[15%]'}`}>
                     <MessageInput 
                       onSendMessage={handleSendMessage}
                       isLoading={isLoading}
                     />
                   </div>
-                {/* </StarBorder> */}
               </div>
             </div>
 

@@ -62,7 +62,7 @@ export const MusicRecommendations: React.FC<MusicRecommendationsProps> = ({
         </div>
       </div>
 
-      <div className="space-y-4 h-[calc(100%-80px)] overflow-y-auto pb-4">
+      <div className="space-y-2 h-full overflow-y-hidden pb-2">
         {showSongs ? (
           isLoadingTracks ? (
             <div className="text-center text-foreground/70">Loading song recommendations...</div>
@@ -94,28 +94,22 @@ export const MusicRecommendations: React.FC<MusicRecommendationsProps> = ({
         ) : (
           playlists.map((playlist) => (
             <a
-              key={playlist.id}
-              href={playlist.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glassmorphism p-4 rounded-xl hover:bg-primary/10 transition-colors flex gap-4 items-start"
-            >
-              <img 
-                src={playlist.image} 
-                alt={playlist.name}
-                className="w-20 h-20 object-cover rounded-lg"
-              />
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg mb-1">{playlist.name}</h3>
-                <p className="text-sm text-foreground/70 mb-2">{playlist.owner}</p>
-                <p className="text-sm line-clamp-2 text-foreground/80">
-                  {playlist.description || 'No description available'}
-                </p>
-                <div className="mt-2 text-xs text-primary">
-                  {playlist.tracks} tracks
-                </div>
-              </div>
-            </a>
+  key={playlist.id}
+  href={playlist.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary/10 transition-colors"
+>
+  <img
+    src={playlist.image}
+    alt={playlist.name}
+    className="w-12 h-12 object-cover rounded-md flex-shrink-0"
+  />
+  <div className="flex-1 min-w-0">
+    <div className="font-medium text-sm truncate">{playlist.name}</div>
+    <div className="text-xs text-foreground/70 truncate">{playlist.description || playlist.owner}</div>
+  </div>
+</a>
           ))
         )}
       </div>

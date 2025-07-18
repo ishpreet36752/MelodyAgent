@@ -20,7 +20,7 @@ export const MessageList: React.FC<MessageListProps> = ({ messages, isLoading}) 
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto mb-4 p-4 glassmorphism rounded-xl" style={{ maxHeight: '400px' }}>
+    <div className="flex-1 overflow-y-auto mb-4 p-4 rounded-xl" style={{ maxHeight: '400px' }}>
       <div className="space-y-4">
         {messages.map(message => (
           <MessageBubble 

@@ -31,28 +31,36 @@ state_store = {}
 rate_limit_store = {}
 
 
-async def handle_rate_limits(client: httpx.AsyncClient, method: str, endpoint: str, data: dict = None, max_retries: int = 3):
+async def handle_rate_limits(
+    client: httpx.AsyncClient,
+    method: str,
+    endpoint: str,
+    data: dict = None,
+    max_retries: int = 3,
+):
     retries = 0
     while retries < max_retries:
         if endpoint in rate_limit_store:
             reset_time = rate_limit_store[endpoint]
             if reset_time > time.time():
-                await asyncio.sleep(reset_time - time.time()) # wait until rate limit resets
+                await asyncio.sleep(
+                    reset_time - time.time()
+                )  # wait until rate limit resets
             del rate_limit_store[endpoint]
 
-       ## Check if endpoint is rate-limited
+        ## Check if endpoint is rate-limited
         if method == "POST":
             response = await client.post(endpoint, data=data)
         else:
             response = await client.get(endpoint)
-        #if blocked by rate limit wait for retry time
+        # if blocked by rate limit wait for retry time
         if response.status_code == 429:
             retry_after = int(response.headers.get("Retry-After", 1))
             rate_limit_store[endpoint] = time.time() + retry_after
             await asyncio.sleep(retry_after)
             retries += 1
         else:
-            return response # return the response if successful
+            return response  # return the response if successful
     raise HTTPException(status_code=429, detail="Rate limit exceeded")
 
 
@@ -68,6 +76,7 @@ async def login(request: Request):
     )
     return RedirectResponse(auth_url)
 
+
 @app.get("/callback")
 async def callback(request: Request, code: str = None, state: str = None):
     if not state or state not in state_store:
@@ -82,32 +91,31 @@ async def callback(request: Request, code: str = None, state: str = None):
             "client_id": client_id,
             "client_secret": client_secret,
         }
-        
+
         try:
             response = await handle_rate_limits(
                 client,
                 method="POST",
                 endpoint="https://accounts.spotify.com/api/token",
                 max_retries=3,
-                data=data
+                data=data,
             )
         except HTTPException as e:
             return JSONResponse(
                 status_code=e.status_code,
-                content={"error": "Spotify API rate limit exceeded"}
+                content={"error": "Spotify API rate limit exceeded"},
             )
-        
+
         if response.status_code != 200:
             raise HTTPException(status_code=400, detail="Failed to get tokens")
-        
+
         tokens = response.json()
         access_token = tokens["access_token"]
         refresh_token = tokens.get("refresh_token")
 
-    frontend_redirect = (
-        f"{frontend_uri}/callback?access_token={access_token}&refresh_token={refresh_token}"
-    )
+    frontend_redirect = f"{frontend_uri}/callback?access_token={access_token}&refresh_token={refresh_token}"
     return RedirectResponse(frontend_redirect)
+
 
 @app.get("/refresh_token")
 async def refresh_token(refresh_token: str):
@@ -120,25 +128,25 @@ async def refresh_token(refresh_token: str):
         }
         try:
             response = await handle_rate_limits(
-                client = client,
+                client=client,
                 method="POST",
                 data=data,
                 endpoint="https://accounts.spotify.com/api/token",
-                max_retries=3
+                max_retries=3,
             )
         except HTTPException as e:
             return JSONResponse(
                 status_code=e.status_code,
-                content={"error": "Spotify API rate limit exceeded"}
+                content={"error": "Spotify API rate limit exceeded"},
             )
-        
+
         if response.status_code != 200:
             raise HTTPException(status_code=400, detail="Failed to refresh token")
-        
+
         new_tokens = response.json()
         return {
             "access_token": new_tokens["access_token"],
-            "refresh_token": new_tokens.get("refresh_token", refresh_token)
+            "refresh_token": new_tokens.get("refresh_token", refresh_token),
         }
 
 
@@ -149,20 +157,23 @@ async def get_current_user(access_token: str):
         try:
             response = await handle_rate_limits(
                 client,
+                method="GET",
                 endpoint="https://api.spotify.com/v1/me",
-                max_retries=3
+                max_retries=3,
             )
             return response.json()
         except HTTPException as e:
             return JSONResponse(
-                status_code=e.status_code,
-                content={"error": "Rate limit exceeded"}
+                status_code=e.status_code, content={"error": "Rate limit exceeded"}
             )
+
 
 @app.get("/logout")
 async def logout():
     return RedirectResponse(frontend_uri)
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("main:app", host="0.0.0.0", port=8888, reload=True)
