@@ -136,7 +136,15 @@ export default {
 					'50%': { transform: 'translateY(0)' },
 					'75%': { transform: 'translateY(15%)' },
 					'100%': { transform: 'translateY(0)' }
-				}
+				},
+				'star-movement-bottom': {
+					'0%': { transform: 'translate(0%, 0%)', opacity: '1' },
+					'100%': { transform: 'translate(-100%, 0%)', opacity: '0' },
+				},
+				'star-movement-top': {
+					'0%': { transform: 'translate(0%, 0%)', opacity: '1' },
+					'100%': { transform: 'translate(100%, 0%)', opacity: '0' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -149,7 +157,9 @@ export default {
 				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
 				'float': 'float 3s ease-in-out infinite',
 				'ripple': 'ripple 1s linear',
-				'wave': 'wave 2s ease-in-out infinite'
+				'wave': 'wave 2s ease-in-out infinite',
+				'star-movement-bottom': 'star-movement-bottom 6s linear infinite alternate',
+				'star-movement-top': 'star-movement-top 6s linear infinite alternate',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

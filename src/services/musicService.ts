@@ -233,7 +233,7 @@ export const getTrackRecommendations = async (trackId: string): Promise<Playlist
     const reccoResponse = await axios.get(
       'https://api.reccobeats.com/v1/track/recommendation',
       {
-        params: { seeds: trackId, size: 10 },
+        params: { seeds: trackId, size: 15 },
         headers: { Accept: `application/json` }
       }
     );
