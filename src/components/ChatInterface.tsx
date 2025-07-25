@@ -174,9 +174,9 @@ export const ChatInterface: React.FC = () => {
             </div>
           </div>
           {/* Chat Interface */}
-          <div className="flex flex-col md:flex-row gap-6 lg:gap-8 h-[calc(100vh-160px)] relative ">
+          <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-160px)] relative ">
             <div className="flex-1 flex flex-col h-full overflow-hidden">
-              <div className="flex-1 inset-card mb-6 overflow-hidden">
+              <div className="flex-1 inset-card overflow-hidden">
                 {shouldShowChat && (
                   <MessageList messages={messages} isLoading={isLoading} />
                 )}
@@ -197,7 +197,7 @@ export const ChatInterface: React.FC = () => {
             </div>
 
             {shouldShowChat && (
-              <div className="md:w-[380px] lg:w-[420px] h-full overflow-y-auto pb-4  custom-scrollbar">
+              <div className=" h-full w-[20rem] overflow-y-auto custom-scrollbar -mr-4">
                 <MusicRecommendations 
                   playlists={recommendedPlaylists} 
                   currentMood={currentMood} 

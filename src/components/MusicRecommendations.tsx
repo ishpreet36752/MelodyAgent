@@ -36,7 +36,7 @@ export const MusicRecommendations: React.FC<MusicRecommendationsProps> = ({
   }, [showSongs]);
 
   return (
-    <div className="flex-1 max-h-full max-w-[85%] overflow-auto">
+    <div className="flex-auto max-h-full  overflow-auto ">
       <div className="flex justify-between mb-4 sticky top-0 bg-background/95 backdrop-blur z-10 pt-2 pb-4 rounded-2xl">
         
         <div className='pl-2'>
