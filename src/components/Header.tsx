@@ -30,7 +30,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-2">
           <AnimatedLogo />
           <h1 className="font-bold text-xl md:text-2xl tracking-tight">
-            <span className="text-gradient">Personal AI</span>
+            <span className="text-gradient">Moodly</span>
           </h1>
         </div>
       </Link>
