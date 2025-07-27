@@ -39,7 +39,7 @@ const Index = () => {
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100,
         damping: 10,
       },
@@ -51,7 +51,7 @@ const Index = () => {
       scale: 1.05,
       boxShadow: "0px 0px 8px rgba(255,255,255,0.3)",
       transition: {
-        type: "spring",
+        type: "spring" as const, 
         stiffness: 400,
         damping: 10,
       },
@@ -124,7 +124,7 @@ const Index = () => {
                       repeatType: "reverse"
                     }
                   }}
-                >
+                  >
                   {texts[index]}
                 </motion.button>
               </Link>

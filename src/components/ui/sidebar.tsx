@@ -37,11 +37,11 @@ const SidebarProvider = React.forwardRef<
   const openState = isControlled ? open : isOpen
   const setOpenState = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
-      const openState = typeof value === "function" ? value(openState) : value
+      const newOpenState = typeof value === "function" ? value(openState) : value
       if (onOpenChange) {
-        onOpenChange(openState)
+        onOpenChange(newOpenState)
       } else {
-        setIsOpen(openState)
+        setIsOpen(newOpenState)
       }
     },
     [onOpenChange, openState]
@@ -119,7 +119,7 @@ const SidebarContent = React.forwardRef<
       ref={ref}
       data-state={isOpen ? "open" : "closed"}
       className={cn(
-        "flex flex-col gap-4 py-4 data-[state=closed]:hidden",
+        "flex flex-col gap-4 py-4",
         className
       )}
       {...props}
@@ -355,7 +355,7 @@ const useSidebar = () => {
 }
 
 const sidebarVariants = cva(
-  "group relative flex h-full w-full flex-col gap-4 border-r bg-background p-4 transition-all duration-300 ease-in-out data-[state=closed]:w-[60px] data-[state=closed]:p-2",
+  "group relative flex h-full w-full flex-col gap-4 bg-background p-4 transition-all duration-300 ease-in-out data-[state=closed]:w-[60px] data-[state=closed]:p-2 ",
   {
     variants: {
       variant: {
@@ -364,7 +364,7 @@ const sidebarVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "ghost",
     },
   }
 )

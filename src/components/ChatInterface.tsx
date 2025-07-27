@@ -9,6 +9,8 @@ import { Header } from "./Header";
 import axios from "axios";
 import ClickSpark from "@/ui/ClickSpark";
 import { useCurrentTrack } from "../hooks/useCurrentTrack";
+import { ChatSidebar } from "./ChatSidebar";
+import { SidebarProvider } from "./ui/sidebar";
 
 export const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -123,89 +125,100 @@ export const ChatInterface: React.FC = () => {
       setIsLoading(false);
     }
   };
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   // Determine if chat components should be visible
   const shouldShowChat = messages.length > 1;
 
   return (
     <>
       <div className="min-h-screen flex flex-col bg-gradient-to-r bg-black/90">
-      <ClickSpark 
-      sparkColor='#000'
-  sparkSize={10}
-  sparkRadius={15}
-  sparkCount={8}
-  duration={400}
-      >
-        {/* <Header /> */}
-        <div className="app-container min-w-full min-h-screen rounded-3xl bg-gradient-to-b from-primary-foreground via-primary/90 to-primary-foreground/90">
-          {/* Now playing */}
-          <div className="min-w-full flex justify-center items-center">
-            <div className="flex cursor-pointer justify-center items-center h-12 w-auto -mt-4 mb-2 px-4 bg-gradient-to-r from-background to-background/80 rounded-3xl gap-2">
-              {currentTrack ? (
-                <>
-                  <div className="flex flex-row">
-                    <img
-                      className="w-8 h-8 rounded-md"
-                      src={currentTrack.image}
-                      alt="Now playing"
-                    />
-                    <div className="flex flex-col ml-2">
-                      <span className="text-sm font-medium text-primary">
-                        {currentTrack.name}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {currentTrack.artist}
-                      </span>
+        <ClickSpark
+          sparkColor='#000'
+          sparkSize={10}
+          sparkRadius={15}
+          sparkCount={8}
+          duration={400}
+        >
+          {/* <Header /> */}
+          <div className="app-container min-w-full min-h-screen rounded-3xl bg-gradient-to-b from-primary-foreground via-primary/90 to-primary-foreground/90">
+            <SidebarProvider defaultOpen={true} open={isSidebarOpen} onOpenChange={setIsSidebarOpen} collapsible={true}>
+              <div className="flex flex-row gap-2">
+                <div className="w-min min-h-[92vh]">
+                  <ChatSidebar />
+                </div>
+                
+                <div className="flex-1 flex flex-col">
+                  {/* Now playing */}
+                  <div className="flex justify-center items-center">
+                    <div className="flex cursor-pointer justify-center items-center h-12 w-auto -mt-4 mb-2 px-4 bg-gradient-to-r from-background to-background/80 rounded-3xl gap-2">
+                      {currentTrack ? (
+                        <>
+                          <div className="flex flex-row">
+                            <img
+                              className="w-8 h-8 rounded-md"
+                              src={currentTrack.image}
+                              alt="Now playing"
+                            />
+                            <div className="flex flex-col ml-2">
+                              <span className="text-sm font-medium text-primary">
+                                {currentTrack.name}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {currentTrack.artist}
+                              </span>
+                            </div>
+                            {currentTrack.isPlaying && (
+                              <div className="ml-3 mt-3 w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                            )}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-md bg-muted" />
+                          <span className="text-sm text-muted-foreground">
+                            Not playing
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    {currentTrack.isPlaying && (
-                      <div className="ml-3 mt-3 w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  </div>
+                  
+                  {/* Chat Interface */}
+                  <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-160px)] relative flex-1">
+                    <div className="flex-1 flex flex-col h-full overflow-hidden">
+                      <div className="flex-1 inset-card overflow-hidden">
+                        {shouldShowChat && (
+                          <MessageList messages={messages} isLoading={isLoading} />
+                        )}
+                        {/* <div className="mt-28">
+                        <MoodSelector
+                          moods={moods}
+                          currentMood={currentMood}
+                          onMoodSelect={handleMoodSelection}
+                        />
+                      </div> */}
+                        <div className={`${shouldShowChat ? '' : 'mt-[15%]'}`}>
+                          <MessageInput
+                            onSendMessage={handleSendMessage}
+                            isLoading={isLoading}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {shouldShowChat && (
+                      <div className="h-full w-[20rem] overflow-y-auto custom-scrollbar -mr-4">
+                        <MusicRecommendations
+                          playlists={recommendedPlaylists}
+                          currentMood={currentMood}
+                        />
+                      </div>
                     )}
                   </div>
-                </>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-md bg-muted" />
-                  <span className="text-sm text-muted-foreground">
-                    Not playing
-                  </span>
                 </div>
-              )}
-            </div>
-          </div>
-          {/* Chat Interface */}
-          <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-160px)] relative ">
-            <div className="flex-1 flex flex-col h-full overflow-hidden">
-              <div className="flex-1 inset-card overflow-hidden">
-                {shouldShowChat && (
-                  <MessageList messages={messages} isLoading={isLoading} />
-                )}
-                {/* <div className="mt-28">
-                  <MoodSelector
-                    moods={moods}
-                    currentMood={currentMood}
-                    onMoodSelect={handleMoodSelection}
-                  />
-                </div> */}
-                  <div className={`${shouldShowChat ? '' : 'mt-[15%]'}`}>
-                    <MessageInput 
-                      onSendMessage={handleSendMessage}
-                      isLoading={isLoading}
-                    />
-                  </div>
               </div>
-            </div>
-
-            {shouldShowChat && (
-              <div className=" h-full w-[20rem] overflow-y-auto custom-scrollbar -mr-4">
-                <MusicRecommendations 
-                  playlists={recommendedPlaylists} 
-                  currentMood={currentMood} 
-                />
-              </div>
-            )}
+            </SidebarProvider>
           </div>
-        </div>
         </ClickSpark>
       </div>
     </>
