@@ -62,18 +62,18 @@ export function ChatSidebar() {
       <div className="flex flex-col h-full p-4">
         {/* Header */}
         <div className="flex items-center gap-2 mb-6">
-          <SidebarTrigger className="h-8 w-8 p-1 rounded-md hover:bg-white/10 transition-colors text-white" />
+          <SidebarTrigger className="h-8 w-8 p-1 rounded-md hover:bg-white/10 transition-colors text-black" />
           <div className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center">
-            <Music className="w-4 h-4 text-white" />
+            <Music className="w-4 h-4 text-black" />
           </div>
-          <span className={`font-semibold text-lg text-orange-600 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+          <span className={`font-semibold text-lg text-black transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
             Moodly
           </span>
         </div>
         
         {/* Navigation */}
         <div className="flex-1">
-          <div className={`text-white/70 text-xs font-semibold mb-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+          <div className={`text-black/70 text-xs font-semibold mb-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
             Navigation
           </div>
           <div className="space-y-1">
@@ -81,7 +81,7 @@ export function ChatSidebar() {
               <a 
                 key={item.title}
                 href={item.url} 
-                className="flex items-center gap-3 text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-md p-2"
+                className="flex items-center gap-3 text-black/80 hover:text-black hover:bg-white/10 transition-all duration-300 rounded-md p-2"
                 title={!isOpen ? item.title : undefined}
               >
                 <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -97,7 +97,7 @@ export function ChatSidebar() {
         <div className="mt-auto">
           <button 
             onClick={handleLogout} 
-            className="flex items-center gap-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-300 rounded-md p-2 w-full"
+            className="flex items-center gap-3 text-red-600 hover:text-red-600 hover:bg-transparent transition-all duration-300 rounded-md p-2 w-full"
             title={!isOpen ? "Logout" : undefined}
           >
             <LogOut className="w-4 h-4 flex-shrink-0" />
