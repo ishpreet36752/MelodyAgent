@@ -3,7 +3,6 @@
 > *"The perfect soundtrack for every emotion, powered by AI"*
 
 Vibe Chat - Moodly is an innovative platform that transforms your mood into personalized music experiences. Whether you're a music lover seeking the perfect playlist or a producer looking for inspiration, our AI-powered assistant curates the ideal soundtrack for your current vibe.
-fff
 ## Share Your Feedback
 
 Hey #MusicLovers! I'm building something special for music enthusiasts and producers. Would you like to help validate this idea? Let's connect and shape the future of music discovery together! 
