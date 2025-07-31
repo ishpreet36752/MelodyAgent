@@ -11,7 +11,6 @@ Hey #MusicLovers! I'm building something special for music enthusiasts and produ
 **DM me to share your thoughts** - Let's make this the next big thing in music tech! #MusicTech #Innovation
 
 ## Key Features
-
 ### For Music Lovers 
 - **Mood-Based Playlists** - Get personalized playlists that match your current vibe
 - **AI Chat Interface** - Simply describe your mood in words and let our AI do the rest
