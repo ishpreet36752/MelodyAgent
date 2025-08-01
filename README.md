@@ -3,21 +3,17 @@
 > *"The perfect soundtrack for every emotion, powered by AI"*
 
 Vibe Chat - Moodly is an innovative platform that transforms your mood into personalized music experiences. Whether you're a music lover seeking the perfect playlist or a producer looking for inspiration, our AI-powered assistant curates the ideal soundtrack for your current vibe.
-## Share Your Feedback
 
-Hey #MusicLovers! I'm building something special for music enthusiasts and producers. Would you like to help validate this idea? Let's connect and shape the future of music discovery together! 
+## Features
 
-**DM me to share your thoughts** - Let's make this the next big thing in music tech! #MusicTech #Innovation
-
-## Key Features
-### For Music Lovers 
-- **Mood-Based Playlists** - Get personalized playlists that match your current vibe
-- **AI Chat Interface** - Simply describe your mood in words and let our AI do the rest
-- **Spotify Integration** - Seamless connection to your Spotify account
+### For Music Lovers
+- **AI-Powered Mood Detection** - Describe your mood in natural language and let our AI understand your emotions
+- **Personalized Playlists** - Get Spotify playlists that match your current vibe
+- **Smart Recommendations** - Discover new music based on your emotional state
 - **Mood Tracking** - See how your music tastes evolve with your emotions
-- **Discover New Music** - Expand your horizons with AI-curated recommendations
+- **Currently Playing Integration** - Get recommendations based on what you're currently listening to
 
-### For Music Producers 
+### For Music Producers
 - **Mood Analysis** - Understand the emotional impact of your tracks
 - **Genre Insights** - See how your music fits into different mood categories
 - **Trending Moods** - Stay ahead of what listeners are feeling right now
@@ -34,7 +30,7 @@ Hey #MusicLovers! I'm building something special for music enthusiasts and produ
 ### Key Integrations
 - **Music Platform**: Spotify Web API
 - **Authentication**: Spotify OAuth 2.0
-- **AI/ML**: Custom mood detection algorithms
+- **AI/ML**: Hugging Face emotion detection models
 - **Real-time Updates**: WebSockets for live interactions
 
 ### Development Tools
@@ -43,6 +39,7 @@ Hey #MusicLovers! I'm building something special for music enthusiasts and produ
 - **Package Manager**: npm
 
 ## Project Structure
+
 ```
 src/
 ├── components/           # Reusable UI components
@@ -87,76 +84,28 @@ src/
 
 ## How It Works
 
-### 1. Connect & Share
-- Sign in with your Spotify account
-- Share your current mood through text or emojis
-- Let our AI analyze your emotional state
+### 1. Authentication Flow
+1. User clicks "Connect with Spotify" on the landing page
+2. Redirected to Spotify's OAuth authorization page
+3. After authorization, redirected back to app with access token
+4. Tokens are securely stored in localStorage
 
-### 2. Discover Music
-- Get personalized playlist recommendations
-- Explore different genres and moods
-- Save your favorite tracks and playlists
+### 2. Mood Detection
+1. User describes their mood in the chat interface
+2. AI analyzes the text using Hugging Face emotion detection models
+3. Emotions are mapped to music moods (happy, sad, energetic, calm, focus)
+4. System generates a conversational response
 
-### 3. For Music Producers
-- Analyze the mood of your tracks
-- Get insights into your music's emotional impact
-- Connect with listeners who vibe with your sound
+### 3. Music Recommendations
+1. Based on detected mood, Spotify API is queried for relevant playlists
+2. Results are formatted and displayed in the UI
+3. Users can click to open playlists directly in Spotify
 
-### 4. Build Your Vibe Profile
-- Track your mood patterns over time
-- Discover how your music tastes evolve
-- Get smarter recommendations as you use the app
-
-## Key Features in Depth
-
-### Smart Chat Interface
-- Natural language processing to understand your mood
-- Context-aware responses and suggestions
-- Quick mood selection with visual feedback
-
-### Advanced Mood Analysis
-- Real-time mood detection from text input
-- Emotion mapping to music characteristics
-- Personalized mood history and insights
-
-### Music Discovery Engine
-- AI-curated playlists based on emotional state
-- Blend of familiar favorites and new discoveries
-- Mood-based radio stations
-
-### Producer Tools
-- Track mood analysis dashboard
-- Compare your music's emotional profile
-- Audience mood insights
-
-## Secure & Private
-
-### Authentication
-- OAuth 2.0 with Spotify
-- Secure token management
-- Optional anonymous browsing
-
-### Data Privacy
-- Your listening data stays private
-- Clear data controls
-- Transparent data usage policies
-
-## Design Philosophy
-
-### Immersive Experience
-- Dark theme optimized for music discovery
-- Smooth animations and transitions
-- Haptic feedback for interactions
-
-### Accessibility First
-- High contrast modes
-- Screen reader support
-- Keyboard navigation
-
-### Responsive Design
-- Beautiful on all devices
-- Optimized for mobile listening
-- Seamless desktop experience
+### 4. Currently Playing Recommendations
+1. System detects what track the user is currently playing
+2. Uses ReccoBeats API to find similar tracks
+3. Retrieves detailed track information from Spotify
+4. Displays recommendations in the sidebar
 
 ## API Integration
 
@@ -164,10 +113,11 @@ src/
 - Search API for playlists
 - User profile information
 - Playlist details
+- Currently playing track
 
 ### Mood Detection:
-- Pattern matching for mood keywords
-- Fallback to predefined moods
+- Hugging Face emotion classification models
+- Pattern matching for mood keywords as fallback
 - Contextual analysis of user input
 
 ## State Management
@@ -178,6 +128,7 @@ The application uses React's useState and useEffect hooks for:
 - Playlist recommendations
 - Loading states
 - Authentication status
+- Currently playing track
 
 ## Implementation Details
 
@@ -225,10 +176,97 @@ VITE_SPOTIFY_CLIENT_ID=your_client_id
 VITE_SPOTIFY_CLIENT_SECRET=your_client_secret
 VITE_REDIRECT_URI=http://localhost:5173/callback
 
+# Hugging Face API Token
+VITE_HF_TOKEN=your_hugging_face_token
+
+# Backend Server
+VITE_BACKEND_URL=http://localhost:8888
+
 # Optional Configuration
 VITE_APP_ENV=development
-VITE_API_BASE_URL=http://localhost:3000/api
 ```
+
+## Backend Setup
+
+1. Navigate to the backend directory: `cd backend`
+2. Install Python dependencies: `pip install -r requirements.txt`
+3. Set up environment variables in `backend/.env`
+4. Run the server: `python main.py`
+
+## Backend Environment Variables
+
+```env
+# Spotify API Credentials
+SPOTIFY_CLIENT_ID=your_client_id
+SPOTIFY_CLIENT_SECRET=your_client_secret
+REDIRECT_URI=http://localhost:5173/callback
+FRONTEND_URI=http://localhost:5173
+```
+
+## Development
+
+### Available Scripts
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run build:dev` - Build for development
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
+
+### Code Quality
+- TypeScript for type safety
+- ESLint and Prettier for code formatting
+- Husky for git hooks
+- Conventional commits for changelog generation
+
+## Contributing
+
+We welcome contributions to Vibe Chat - Moodly! Here's how you can help:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Commit with conventional commit messages
+5. Push to your fork
+6. Create a pull request
+
+### Development Guidelines
+- Follow existing code style
+- Write meaningful commit messages
+- Add tests for new features
+- Update documentation as needed
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Spotify Authentication Fails**
+   - Check that your Spotify credentials are correct
+   - Ensure your redirect URI is registered in the Spotify Developer Dashboard
+   - Verify that the backend server is running
+
+2. **No Playlists Loading**
+   - Check network requests in browser dev tools
+   - Verify Spotify API access token is valid
+   - Confirm internet connection
+
+3. **Mood Detection Not Working**
+   - Check Hugging Face API token
+   - Verify internet connection
+   - Check browser console for errors
+
+## Roadmap
+
+### Short Term
+- [ ] Add more mood categories
+- [ ] Implement user preferences
+- [ ] Add playlist creation feature
+- [ ] Improve mobile responsiveness
+
+### Long Term
+- [ ] Social features (share moods/playlists)
+- [ ] Mood history tracking
+- [ ] Integration with other music platforms
+- [ ] Advanced recommendation algorithms
 
 ## Join Our Community
 
@@ -248,6 +286,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
 - [React](https://reactjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [Hugging Face](https://huggingface.co/)
 - All our amazing contributors and beta testers!
 
 ---
