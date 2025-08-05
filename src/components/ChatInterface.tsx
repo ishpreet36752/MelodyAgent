@@ -188,6 +188,7 @@ export const ChatInterface: React.FC = () => {
                     <div className="flex-1 flex flex-col h-full overflow-hidden">
                       <div className="flex-1 inset-card overflow-hidden">
                         {shouldShowChat && (
+                          
                           <MessageList messages={messages} isLoading={isLoading} />
                         )}
                         {/* <div className="mt-28">
@@ -197,7 +198,7 @@ export const ChatInterface: React.FC = () => {
                           onMoodSelect={handleMoodSelection}
                         />
                       </div> */}
-                        <div className={`${shouldShowChat ? '' : 'mt-[15%]'}`}>
+                        <div className={`${shouldShowChat ? 'mt-[1%]' : 'mt-[15%]'}`}>
                           <MessageInput
                             onSendMessage={handleSendMessage}
                             isLoading={isLoading}

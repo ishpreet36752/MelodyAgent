@@ -22,7 +22,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, isLoa
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full flex justify-center items-center py-2"
+      className="w-full flex justify-center items-center py-2 "
     >
       <StarBorder
         as="div"

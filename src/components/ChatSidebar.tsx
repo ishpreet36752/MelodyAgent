@@ -58,13 +58,13 @@ export function ChatSidebar() {
   };
 
   return (
-    <div className={`transition-all duration-300 ease-in-out h-full bg-transparent ${isOpen ? 'w-64' : 'w-16'} overflow-hidden`}>
-      <div className="flex flex-col h-full p-4">
+    <div className={`transition-all duration-300 ease-in-out h-full bg-transparent ${isOpen ? 'w-48' : 'w-16'} overflow-hidden`}>
+      <div className="flex flex-col h-full -pl-5">
         {/* Header */}
         <div className="flex items-center gap-2 mb-6">
           <SidebarTrigger className="h-8 w-8 p-1 rounded-md hover:bg-white/10 transition-colors text-black" />
           <div className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center">
-            <Music className="w-4 h-4 text-black" />
+            <Music className="w-5 h-5 text-black" />
           </div>
           <span className={`font-semibold text-lg text-black transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
             Moodly
@@ -84,7 +84,7 @@ export function ChatSidebar() {
                 className="flex items-center gap-3 text-black/80 hover:text-black hover:bg-white/10 transition-all duration-300 rounded-md p-2"
                 title={!isOpen ? item.title : undefined}
               >
-                <item.icon className="w-4 h-4 flex-shrink-0" />
+                <item.icon className="w-5 h-5 flex-shrink-0" />
                 <span className={`transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
                   {item.title}
                 </span>
@@ -100,7 +100,7 @@ export function ChatSidebar() {
             className="flex items-center gap-3 text-red-600 hover:text-red-600 hover:bg-transparent transition-all duration-300 rounded-md p-2 w-full"
             title={!isOpen ? "Logout" : undefined}
           >
-            <LogOut className="w-4 h-4 flex-shrink-0" />
+            <LogOut className="w-5 h-5 flex-shrink-0" />
             <span className={`transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
               Logout
             </span>
