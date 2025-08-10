@@ -11,7 +11,7 @@ type SplineSceneProps = {
 };
 
 const SplineScene: React.FC<SplineSceneProps> = ({
-  sceneUrl = "/scene.splinecode",
+  sceneUrl,
   className = "",
   mountOffsetPx = 120,
 }) => {
@@ -37,7 +37,7 @@ const SplineScene: React.FC<SplineSceneProps> = ({
   }, [shouldMount, mountOffsetPx]);
 
   return (
-    <div ref={wrapperRef} className="pointer-events-none absolute inset-0 -z-5 overflow-hidden">
+    <div ref={wrapperRef} className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       {shouldMount ? (
         <Suspense fallback={null}>
           <motion.div

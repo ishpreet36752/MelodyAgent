@@ -68,10 +68,8 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-r bg-black relative overflow-hidden">
       {/* Background Spline - lazy and scroll-activated */}
       <Suspense fallback={null}>
-        <SplineScene sceneUrl="/scene.splinecode" />
+        <SplineScene sceneUrl="https://prod.spline.design/BWKQMiH2x7TXQJyt/scene.splinecode" />
       </Suspense>
-      {/* Readability gradient overlay (above spline, below content) */}
-      <div className="pointer-events-none absolute inset-0 -z-0 bg-gradient-to-b from-black/20 via-black/50 to-black/80" />
       <ClickSpark
   sparkColor='#fff'
   sparkSize={10}
