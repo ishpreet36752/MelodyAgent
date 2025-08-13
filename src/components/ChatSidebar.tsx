@@ -58,7 +58,7 @@ export function ChatSidebar() {
   };
 
   return (
-    <div className={`transition-all duration-300 ease-in-out h-full bg-transparent ${isOpen ? 'w-48' : 'w-16'} overflow-hidden`}>
+    <div className={`transition-all duration-300 ease-in-out h-full bg-transparent ${isOpen ? 'w-40' : 'w-14'} overflow-hidden`}>
       <div className="flex flex-col h-full -pl-5">
         {/* Header */}
         <div className="flex items-center gap-2 mb-6">
@@ -73,9 +73,9 @@ export function ChatSidebar() {
         
         {/* Navigation */}
         <div className="flex-1">
-          <div className={`text-black/70 text-xs font-semibold mb-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+          {/* <div className={`text-black/70 text-xs font-semibold mb-4 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
             Navigation
-          </div>
+          </div> */}
           <div className="space-y-1">
             {menuItems.map((item) => (
               <a 
