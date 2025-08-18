@@ -68,7 +68,7 @@ async def handle_rate_limits(
 async def login(request: Request):
     state = secrets.token_hex(16)
     state_store[state] = True
-    scope = "user-read-private user-read-email user-read-playback-state user-read-currently-playing"
+    scope = "user-read-private user-read-email user-read-playback-state user-read-currently-playing playlist-modify-public playlist-read-private"
     auth_url = (
         f"https://accounts.spotify.com/authorize?"
         f"response_type=code&client_id={client_id}&"

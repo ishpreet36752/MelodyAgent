@@ -9,14 +9,17 @@ export const Header: React.FC = () => {
   const accessToken = localStorage.getItem("spotify_access_token");
   
   const authorizationHandler = () => {
-    window.location.href = `${import.meta.env.VITE_BACKEND_URI}/login`;
+    const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://localhost:8888';
+    window.location.href = `${backendUri}/login`;
   };
 
   const signOutHandler = async () => {
     try {
-      await axios.get(`http://localhost:8888/logout`);
+      const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://localhost:8888';
+      await axios.get(`${backendUri}/logout`);
       localStorage.removeItem('spotify_access_token');
       localStorage.removeItem('spotify_refresh_token');
+      localStorage.removeItem('spotify_token_timestamp');
       window.location.href = '/';
     } catch (error) {
       console.error('Error signing out:', error);

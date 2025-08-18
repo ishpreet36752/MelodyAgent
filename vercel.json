@@ -1,6 +1,17 @@
 {
-    "rewrites": [
-      { "source": "/(.*)", "destination": "/" }
-    ]
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ],
+  "env": {
+    "VITE_SPOTIFY_CLIENT_ID": "@spotify_client_id",
+    "VITE_SPOTIFY_REDIRECT_URI": "@spotify_redirect_uri",
+    "VITE_BACKEND_URI": "@backend_uri",
+    "VITE_HF_TOKEN": "@hf_token"
+  },
+  "functions": {
+    "api/**/*.py": {
+      "runtime": "python3.9"
+    }
   }
+}
   

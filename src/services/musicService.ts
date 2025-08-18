@@ -4,11 +4,16 @@ import axios from 'axios';
 import { HfInference } from '@huggingface/inference';
 
 const HF_TOKEN = import.meta.env.VITE_HF_TOKEN;
-if (!HF_TOKEN) {
-  throw new Error('Hugging Face token not configured');
-}
+let hf: HfInference | null = null;
 
-const hf = new HfInference(HF_TOKEN);
+// Initialize HuggingFace client only if token is available
+if (HF_TOKEN) {
+  try {
+    hf = new HfInference(HF_TOKEN);
+  } catch (error) {
+    console.warn('Failed to initialize HuggingFace client:', error);
+  }
+}
 
 const emotionToMoodMapping: Record<string, MoodType> = {
   'joy': 'happy',
@@ -38,7 +43,8 @@ export const checkTokenExpiration = () => {
 
 export const refreshToken = async () => {
   try {
-    const response = await axios.get('http://localhost:8888/refresh_token', {
+    const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://localhost:8888';
+    const response = await axios.get(`${backendUri}/refresh_token`, {
       params: { refresh_token: getAuthData().refresh_token }
     });
 
@@ -111,6 +117,11 @@ export const fetchPlaylists = async (mood: MoodType): Promise<Playlist[]> => {
 };
 
 async function detectEmotion(text: string): Promise<MoodType> {
+  if (!hf) {
+    console.warn('HuggingFace client not initialized, using fallback emotion detection.');
+    return detectMoodFallback(text);
+  }
+
   try {
     const response = await hf.textClassification({
       model: 'j-hartmann/emotion-english-distilroberta-base',
@@ -121,6 +132,7 @@ async function detectEmotion(text: string): Promise<MoodType> {
     return emotionToMoodMapping[topEmotion] || 'calm';
   } catch (error) {
     console.error('Emotion detection failed, using fallback:', error);
+    // Always fallback to text-based detection when HuggingFace fails
     return detectMoodFallback(text);
   }
 }
@@ -145,6 +157,11 @@ function detectMoodFallback(text: string): MoodType {
 }
 
 async function generateConversationalResponse(mood: MoodType): Promise<string> {
+  if (!hf) {
+    console.warn('HuggingFace client not initialized, using fallback conversation generation.');
+    return `I understand feeling ${mood}. Let's find the perfect music to match your mood.`;
+  }
+
   try {
     const prompt = `<s>[INST] <<SYS>>
 You are a compassionate music assistant. Acknowledge the user's ${mood} mood with empathy, 
@@ -177,6 +194,7 @@ User is feeling ${mood}. Generate an appropriate response that:
     return generated || `I understand feeling ${mood}. Let's find the perfect music to match your mood.`;
   } catch (error) {
     console.error('Conversation generation failed:', error);
+    // Always fallback to simple response when HuggingFace fails
     return `I want to find the best ${mood} music for you. Let's explore some playlists!`;
   }
 }
