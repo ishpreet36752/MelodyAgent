@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -6,7 +6,7 @@ import ClickSpark from "@/ui/ClickSpark";
 import GlassSurface from "../components/GlassSurface";
 import Footer from "../components/Footer";
 // Lazy Spline wrapper
-const SplineScene = lazy(() => import("../components/SplineScene"));
+// const SplineScene = lazy(() => import("../components/SplineScene"));
 
 const Index = () => {
   const texts = [
