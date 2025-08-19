@@ -72,7 +72,7 @@ async def login(request: Request):
     auth_url = (
         f"https://accounts.spotify.com/authorize?"
         f"response_type=code&client_id={client_id}&"
-        f"scope={scope}&redirect_uri={redirect_uri}&state={state}"
+        f"scope={scope}&redirect_uri={redirect_uri}&state={state}&show_dialog=true"
     )
     return RedirectResponse(auth_url)
 
