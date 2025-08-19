@@ -10,9 +10,12 @@ let hf: HfInference | null = null;
 if (HF_TOKEN) {
   try {
     hf = new HfInference(HF_TOKEN);
+    console.log('✅ HuggingFace client initialized successfully');
   } catch (error) {
-    console.warn('Failed to initialize HuggingFace client:', error);
+    console.warn('❌ Failed to initialize HuggingFace client:', error);
   }
+} else {
+  console.warn('⚠️ VITE_HF_TOKEN not found. HuggingFace features will use fallbacks.');
 }
 
 const emotionToMoodMapping: Record<string, MoodType> = {
@@ -298,20 +301,20 @@ export const getTrackRecommendations = async (trackId: string): Promise<Playlist
     );
 
    
-    return recommendations.map((reccoTrack: any) => {
-      const spotifyTrack = spotifyTracksMap.get(reccoTrack.spotifyId) || {};
-      
-      return {
-        id: reccoTrack.spotifyId,
-        name: spotifyTrack.name || reccoTrack.trackTitle,
-        description: spotifyTrack.artists?.[0]?.name || reccoTrack.artists?.[0]?.name || 'Various Artists',
-        image: spotifyTrack.album?.images?.[0]?.url || '/default-track.png',
-        url: spotifyTrack.external_urls?.spotify || reccoTrack.href,
-        // owner: spotifyTrack.artists?.[0]?.name || reccoTrack.artists?.[0]?.name || 'Unknown Artist',
-        // duration: spotifyTrack.duration_ms || 0,
-        // popularity: spotifyTrack.popularity || 0
-      };
-    });
+         return recommendations.map((reccoTrack: any) => {
+       const spotifyTrack = spotifyTracksMap.get(reccoTrack.spotifyId) || {};
+       
+       return {
+         id: reccoTrack.spotifyId,
+         name: (spotifyTrack as any).name || reccoTrack.trackTitle,
+         description: (spotifyTrack as any).artists?.[0]?.name || reccoTrack.artists?.[0]?.name || 'Various Artists',
+         image: (spotifyTrack as any).album?.images?.[0]?.url || '/default-track.png',
+         url: (spotifyTrack as any).external_urls?.spotify || reccoTrack.href,
+         // owner: (spotifyTrack as any).artists?.[0]?.name || reccoTrack.artists?.[0]?.name || 'Unknown Artist',
+         // duration: (spotifyTrack as any).duration_ms || 0,
+         // popularity: (spotifyTrack as any).popularity || 0
+       };
+     });
 
   } catch (error) {
     console.error('Recommendation error:', error);

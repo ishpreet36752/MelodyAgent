@@ -5,12 +5,15 @@ import axios from "axios";
 import UserProfile from "./UserProfile";
 import { LogOut } from 'lucide-react';
 import { useLocation } from "react-router-dom";
+import { getSpotifyAuthUrl } from "../services/auth";
+
 export const Header: React.FC = () => {
   const accessToken = localStorage.getItem("spotify_access_token");
   
   const authorizationHandler = () => {
-    const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://localhost:8888';
-    window.location.href = `${backendUri}/login`;
+    // Use frontend OAuth function instead of backend redirect
+    const authUrl = getSpotifyAuthUrl();
+    window.location.href = authUrl;
   };
 
   const signOutHandler = async () => {
